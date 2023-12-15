@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         self.output_dir = os.path.abspath('..\\greyscale_images')
 
 
-#jdnfj
+
     def setupUi(self, MainWindow):
         self.window = MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -103,6 +103,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked.connect(lambda: self.showImages())
         self.pushButton_2.clicked.connect((lambda: self.radiomics()))
 
+#Wczytanie danych
     def getFile(self):
         self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}", "Formats: (*.png )")
 
