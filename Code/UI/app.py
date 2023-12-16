@@ -24,14 +24,16 @@ import numpy as np
 
 class Ui_MainWindow(object):
 
+
     def __init__(self):
-        self.images = []
+
         self.filePath = ''
         self.currentDir = os.getcwd()
-
+        self.images = []
         self.output_dir = os.path.abspath('..\\greyscale_images')
 
     def setupUi(self, MainWindow):
+        self.window = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(951, 633)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -89,8 +91,7 @@ class Ui_MainWindow(object):
         self.widget_6.setObjectName("widget_6")
         self.csvButton = QtWidgets.QPushButton(self.widget)
         self.csvButton.setGeometry(QtCore.QRect(320, 210, 150, 50))
-        self.csvButton.setStyleSheet("background-color: rgb(210, 204, 204);\n"
-"")
+        self.csvButton.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.csvButton.setObjectName("csvButton")
         self.statusLabel = QtWidgets.QLabel(self.widget)
         self.statusLabel.setGeometry(QtCore.QRect(320, 270, 151, 51))
@@ -199,34 +200,40 @@ class Ui_MainWindow(object):
         self.showButton.clicked.connect(lambda: self.showImages())
         self.csvButton.clicked.connect((lambda: self.radiomics()))
 
-        # Wczytanie danych
-        def getFile(self):
-            self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}",
-                                                            "Formats: (*.png )")
 
-            for filePath in self.filePath:
-                image = Image.open(filePath)
-                img_grey = image.convert('L')
+    def getFile(self):
+        #Open window to choose file
+        self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}","Formats: (*.png )")
 
-                filename = os.path.basename(filePath)
-                os.makedirs(self.output_dir, exist_ok=True)
-                output_path = os.path.join(self.output_dir, f"{filename}")
-                # Zapisz obraz w nowym folderze
-                img_grey.save(output_path)
+        for filePath in self.filePath:
+            image = Image.open(filePath)
+            #convert image to greyscale
+            img_grey = image.convert('L')
 
-                greyImage = Image.open(output_path)
-                self.images.append(greyImage)
+            filename = os.path.basename(filePath)
+            #make new folder
+            os.makedirs(self.output_dir, exist_ok=True)
+            #join a filname from original image to image after greyscale
+            output_path = os.path.join(self.output_dir, filename)
+            #save a greyscale image to new folder
+            img_grey.save(output_path)
 
-        def showImages(self):
-            if self.images:
-                print("Number of images:", len(self.images))
-                showData(self.images)
-            else:
-                print("No files selected.")
 
-        def radiomics(self):
-            if self.radioButton.isChecked():
-                extractRadiomics(self.images)
+
+
+            #greyImage = Image.open(output_path)
+            #self.images.append(greyImage)
+
+    def showImages(self):
+        if self.images:
+            print("Number of images:", len(self.images))
+            showData(self.images)
+        else:
+            print("No files selected.")
+
+    def radiomics(self):
+        if self.radioButton.isChecked():
+            extractRadiomics(self.images)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
