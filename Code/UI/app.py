@@ -29,12 +29,18 @@ class Ui_MainWindow(object):
         super().__init__()
 
         self.filePath = ''
+        self.folderPath = ''
         self.currentDir = os.getcwd()
         self.images = []
         self.image_name = []
+        self.image_folder = []
+        self.folder_name = []
+        self.masks = []
+        self.mask_folder = []
         # self.output_dir = os.path.abspath('..\\greyscale_images')
 
     def setupUi(self, MainWindow):
+        self.window = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(951, 633)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -219,8 +225,12 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.loadDataButton.clicked.connect(lambda: self.getFile())
+        self.LoadFolderButton.clicked.connect(lambda: self.getFolder())
         self.showButton.clicked.connect(lambda: self.showImages())
+        self.loadMaskButton.clicked.connect(lambda: self.getMask())
+        self.loadMaskFolderButton.clicked.connect(lambda: self.getMaskFolder())
         self.csvButton.clicked.connect((lambda: self.radiomics()))
+
 
     def getFile(self):
         # Open window to choose file
@@ -233,12 +243,61 @@ class Ui_MainWindow(object):
             self.images.append(image)
             self.image_name.append(name)
 
+    def getFolder(self):
+        # Open window to choose file
+        self.folderPath = QFileDialog.getExistingDirectory(self.window, 'Choose a patient Directory', "${HOME}")
+
+        if self.folderPath:
+            files = os.listdir(self.folderPath)
+
+            for fileName in files:
+                filePath = os.path.join(self.folderPath, fileName)
+                if fileName.lower().endswith(('.png')):
+                    image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
+                    nameFolder = os.path.basename(self.folderPath)
+                    self.image_folder.append(image)
+                    self.folder_name.append(nameFolder)
+        else:
+            print("Empty directory")
+
+
+    def getMask(self):
+        # Open window to choose file
+        self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}", "Formats: (*.png )")
+
+        for filePath in self.filePath:
+            mask = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
+            #name = os.path.basename(filePath)
+            self.masks.append(mask)
+
+
+    def getMaskFolder(self):
+        # Open window to choose file
+        self.folderPath = QFileDialog.getExistingDirectory(self.window, 'Choose a patient Directory', "${HOME}")
+
+        if self.folderPath:
+            files = os.listdir(self.folderPath)
+
+            for fileName in files:
+                filePath = os.path.join(self.folderPath, fileName)
+                if fileName.lower().endswith(('.png')):
+                    maskF = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
+                    #nameFolder = os.path.basename(self.folderPath)
+                    self.mask_folder.append(maskF)
+        else:
+            print("Empty directory")
+
     def showImages(self):
         if self.images:
             print("Number of images:", len(self.images))
             showData(self.images, self.image_name)
+        elif self.image_folder:
+            print("Number of images in the folder:", len(self.image_folder))
+            showData(self.image_folder, self.folder_name)
         else:
             print("No files selected.")
+
+
 
     def radiomics(self):
         if self.radioButton.isChecked():
