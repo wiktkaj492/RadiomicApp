@@ -62,3 +62,8 @@ def extractRadiomics(image, tempGrey):
         # Show the radiomic feature columns
         pyradi_original = pyradi_data.iloc[:,25:]
         pyradi_original.head().style.pipe(make_pretty)
+
+        # Create a DataFrame from the names and features arrays
+        df = pd.DataFrame({'Feature Name': names_l, 'Feature Value': features})
+        # Write the DataFrame to a CSV file
+        df.to_csv('..\\outputs3\\radiomics_features.csv', index=False)

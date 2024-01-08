@@ -7,7 +7,8 @@ from pathlib import Path
 import os
 import numpy as np
 
-def showData(image):
+def showData(image, name):
+    #image.open()
     n = len(image)
     output_dir = os.path.abspath('..\\outputs3')
     os.makedirs(output_dir, exist_ok=True)
@@ -16,8 +17,7 @@ def showData(image):
     plt.figure(figsize=[15, 5])
     for i in range(n):
 
-        img = Image.open(path)
-        #img= image[i]
+        img= image[i]
 
         trans = transforms.ToTensor()
         img_tensor = trans(img)
@@ -25,7 +25,7 @@ def showData(image):
 
         plt.subplot(1, n, i + 1)
         plt.imshow(img_tensor, cmap='gray')
-        plt.title(Path(img).name)
+        plt.title(Path(name[i]).name)
 
     plt.tight_layout()
     output_path = os.path.join(output_dir, 'image_examples_original.png')

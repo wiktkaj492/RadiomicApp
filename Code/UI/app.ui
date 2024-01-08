@@ -105,12 +105,12 @@
       <rect>
        <x>30</x>
        <y>110</y>
-       <width>141</width>
+       <width>161</width>
        <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>1</string>
+      <string>Internal region</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="area2Button">
@@ -123,7 +123,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>2</string>
+      <string>External region</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="bothButton">
@@ -212,8 +212,8 @@
      <widget class="QPushButton" name="csvButton">
       <property name="geometry">
        <rect>
-        <x>320</x>
-        <y>210</y>
+        <x>380</x>
+        <y>330</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -229,10 +229,10 @@
      <widget class="QLabel" name="statusLabel">
       <property name="geometry">
        <rect>
-        <x>320</x>
-        <y>270</y>
+        <x>220</x>
+        <y>340</y>
         <width>151</width>
-        <height>51</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="layoutDirection">
@@ -248,10 +248,78 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QPushButton" name="loadMaskButton">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>30</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Load Mask</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="loadMaskFolderButton">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>30</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Load Mask Folder</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="generateSegButton">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>100</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Generate Segmentation</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="generateNormButton">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>200</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Normalization</string>
+      </property>
+     </widget>
      <zorder>widget_6</zorder>
      <zorder>widget_5</zorder>
      <zorder>csvButton</zorder>
      <zorder>statusLabel</zorder>
+     <zorder>loadMaskButton</zorder>
+     <zorder>loadMaskFolderButton</zorder>
+     <zorder>generateSegButton</zorder>
+     <zorder>generateNormButton</zorder>
     </widget>
     <zorder>widget</zorder>
     <zorder>noNormaButton</zorder>
@@ -450,7 +518,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Classifier SVM</string>
+      <string>Classifier</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

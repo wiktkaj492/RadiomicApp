@@ -19,21 +19,22 @@ from Code.show_data import showData
 from Code.pyRadiomics import extractRadiomics
 from Code.data import CustomDataset
 from PIL import ImageOps, Image
+import cv2
 import numpy as np
 
 
 class Ui_MainWindow(object):
 
-
     def __init__(self):
+        super().__init__()
 
         self.filePath = ''
         self.currentDir = os.getcwd()
         self.images = []
-        self.output_dir = os.path.abspath('..\\greyscale_images')
+        self.image_name = []
+        # self.output_dir = os.path.abspath('..\\greyscale_images')
 
     def setupUi(self, MainWindow):
-        self.window = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(951, 633)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -61,7 +62,7 @@ class Ui_MainWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.area1Button = QtWidgets.QRadioButton(self.frame)
-        self.area1Button.setGeometry(QtCore.QRect(30, 110, 141, 20))
+        self.area1Button.setGeometry(QtCore.QRect(30, 110, 161, 20))
         self.area1Button.setObjectName("area1Button")
         self.area2Button = QtWidgets.QRadioButton(self.frame)
         self.area2Button.setGeometry(QtCore.QRect(30, 130, 141, 20))
@@ -90,20 +91,41 @@ class Ui_MainWindow(object):
         self.widget_6.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.widget_6.setObjectName("widget_6")
         self.csvButton = QtWidgets.QPushButton(self.widget)
-        self.csvButton.setGeometry(QtCore.QRect(320, 210, 150, 50))
-        self.csvButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.csvButton.setGeometry(QtCore.QRect(380, 330, 150, 50))
+        self.csvButton.setStyleSheet("background-color: rgb(210, 204, 204);\n"
+"")
         self.csvButton.setObjectName("csvButton")
         self.statusLabel = QtWidgets.QLabel(self.widget)
-        self.statusLabel.setGeometry(QtCore.QRect(320, 270, 151, 51))
+        self.statusLabel.setGeometry(QtCore.QRect(220, 340, 151, 31))
         self.statusLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.statusLabel.setStyleSheet("")
         self.statusLabel.setText("")
         self.statusLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.statusLabel.setObjectName("statusLabel")
+        self.loadMaskButton = QtWidgets.QPushButton(self.widget)
+        self.loadMaskButton.setGeometry(QtCore.QRect(210, 30, 150, 50))
+        self.loadMaskButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.loadMaskButton.setObjectName("loadMaskButton")
+        self.loadMaskFolderButton = QtWidgets.QPushButton(self.widget)
+        self.loadMaskFolderButton.setGeometry(QtCore.QRect(380, 30, 150, 50))
+        self.loadMaskFolderButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.loadMaskFolderButton.setObjectName("loadMaskFolderButton")
+        self.generateSegButton = QtWidgets.QPushButton(self.widget)
+        self.generateSegButton.setGeometry(QtCore.QRect(380, 100, 150, 50))
+        self.generateSegButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.generateSegButton.setObjectName("generateSegButton")
+        self.generateNormButton = QtWidgets.QPushButton(self.widget)
+        self.generateNormButton.setGeometry(QtCore.QRect(380, 200, 150, 50))
+        self.generateNormButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.generateNormButton.setObjectName("generateNormButton")
         self.widget_6.raise_()
         self.widget_5.raise_()
         self.csvButton.raise_()
         self.statusLabel.raise_()
+        self.loadMaskButton.raise_()
+        self.loadMaskFolderButton.raise_()
+        self.generateSegButton.raise_()
+        self.generateNormButton.raise_()
         self.widget.raise_()
         self.noNormaButton.raise_()
         self.minMaxButton.raise_()
@@ -200,34 +222,21 @@ class Ui_MainWindow(object):
         self.showButton.clicked.connect(lambda: self.showImages())
         self.csvButton.clicked.connect((lambda: self.radiomics()))
 
-
     def getFile(self):
-        #Open window to choose file
-        self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}","Formats: (*.png )")
+        # Open window to choose file
+        self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}", "Formats: (*.png )")
 
         for filePath in self.filePath:
-            image = Image.open(filePath)
-            #convert image to greyscale
-            img_grey = image.convert('L')
-
-            filename = os.path.basename(filePath)
-            #make new folder
-            os.makedirs(self.output_dir, exist_ok=True)
-            #join a filname from original image to image after greyscale
-            output_path = os.path.join(self.output_dir, filename)
-            #save a greyscale image to new folder
-            img_grey.save(output_path)
-
-
-
-
-            #greyImage = Image.open(output_path)
-            #self.images.append(greyImage)
+            image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
+            name = os.path.basename(filePath)
+            # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            self.images.append(image)
+            self.image_name.append(name)
 
     def showImages(self):
         if self.images:
             print("Number of images:", len(self.images))
-            showData(self.images)
+            showData(self.images, self.image_name)
         else:
             print("No files selected.")
 
@@ -243,12 +252,16 @@ class Ui_MainWindow(object):
         self.meanStdButton.setText(_translate("MainWindow", "Mean/Std normalization"))
         self.perButton.setText(_translate("MainWindow", "Percentile normalization"))
         self.label.setText(_translate("MainWindow", "Normalization"))
-        self.area1Button.setText(_translate("MainWindow", "1"))
-        self.area2Button.setText(_translate("MainWindow", "2"))
+        self.area1Button.setText(_translate("MainWindow", "Internal region"))
+        self.area2Button.setText(_translate("MainWindow", "External region"))
         self.bothButton.setText(_translate("MainWindow", "Both"))
         self.label_5.setText(_translate("MainWindow", "Segmentation"))
         self.label_6.setText(_translate("MainWindow", "Select the area to analyze:"))
         self.csvButton.setText(_translate("MainWindow", "Generate CSV"))
+        self.loadMaskButton.setText(_translate("MainWindow", "Load Mask"))
+        self.loadMaskFolderButton.setText(_translate("MainWindow", "Load Mask Folder"))
+        self.generateSegButton.setText(_translate("MainWindow", "Generate Segmentation"))
+        self.generateNormButton.setText(_translate("MainWindow", "Normalization"))
         self.loadDataButton.setText(_translate("MainWindow", "Load Data"))
         self.showButton.setText(_translate("MainWindow", "Show Data"))
         self.button3D.setText(_translate("MainWindow", "3D Image"))
@@ -257,7 +270,7 @@ class Ui_MainWindow(object):
         self.loadRadioDataButton.setText(_translate("MainWindow", "Load Data"))
         self.classifyButton.setText(_translate("MainWindow", "Classify"))
         self.label_2.setText(_translate("MainWindow", "Classification"))
-        self.label_4.setText(_translate("MainWindow", "Classifier SVM"))
+        self.label_4.setText(_translate("MainWindow", "Classifier"))
 
 
 if __name__ == "__main__":
