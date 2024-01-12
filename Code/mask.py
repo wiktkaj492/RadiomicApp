@@ -1,26 +1,64 @@
 import numpy as np
-from PIL import Image
-import csv
+import SimpleITK as sitk
 import pandas as pd
 import os
 
+class Segmentation(object):
 
-seg_filename = "D:\\PNG_001_0000.png"
-output_directory = r"..\outputs3"
-mask_filename = os.path.join(output_directory, "mask.png")
+    def __init__(self):
+        pass
+    def area1Mask(self, masks):
+        new_mask_sitk = []
+        for segmentation_image in masks:
+            unique_values = np.unique(segmentation_image)
+            print("Unique values in the mask:", unique_values)
 
-# Read the image using PIL
-mask_img = Image.open(seg_filename)
+            if not np.any(segmentation_image):
+                mask_array = np.ones_like(segmentation_image, dtype=np.uint8)
+                mask_array[::2, ::2] = 1
+            else:
+                mask_array = np.where(segmentation_image == 1, 1, 0).astype(np.uint8)
 
-# Convert the PIL image to a numpy array
-img_array = np.array(mask_img)
+            print("New Unique values in the mask:", np.unique(mask_array))
 
-# Change the value 0 to -1
-img_array[img_array == 0] = -1
+            mask_image_sitk = sitk.GetImageFromArray(mask_array)
+            new_mask_sitk.append(mask_image_sitk)
+        return new_mask_sitk
 
-# Convert the numpy array back to a PIL image
-mask_img = Image.fromarray(img_array)
 
-# Save the PIL image
-mask_img.save(mask_filename)
+    def area2Mask(self, masks):
+        new_mask_sitk = []
+        for segmentation_image in masks:
+            unique_values = np.unique(segmentation_image)
+            print("Unique values in the mask:", unique_values)
 
+            if not np.any(segmentation_image):
+                mask_array = np.ones_like(segmentation_image, dtype=np.uint8)
+                mask_array[1::2, 1::2] = 2
+            else:
+                mask_array = np.where(segmentation_image == 2, 2, 0).astype(np.uint8)
+
+            print("New Unique values in the mask:", np.unique(mask_array))
+
+            mask_image_sitk = sitk.GetImageFromArray(mask_array)
+            new_mask_sitk.append(mask_image_sitk)
+        return new_mask_sitk
+
+    def bothMask(self, masks):
+        new_mask_sitk = []
+        for segmentation_image in masks:
+            unique_values = np.unique(segmentation_image)
+            print("Unique values in the mask:", unique_values)
+
+            if not np.any(segmentation_image):
+                mask_array = np.ones_like(segmentation_image, dtype=np.uint8)
+                mask_array[::2, ::2] = 1
+                mask_array[1::2, 1::2] = 2
+            else:
+                mask_array = np.where(segmentation_image > 0, segmentation_image, 0).astype(np.uint8)
+            print("New Unique values in the mask:", np.unique(mask_array))
+
+            mask_image_sitk = sitk.GetImageFromArray(mask_array)
+            new_mask_sitk.append(mask_image_sitk)
+
+        return new_mask_sitk

@@ -16,8 +16,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from pathlib import Path
 from Code.show_data import showData
-from Code.pyRadiomics import extractRadiomics
 from Code.data import CustomDataset
+from Code.mask import Segmentation
+from Code.normalize import Normalize
+from Code.pyRadiomics import Radiomics
 from PIL import ImageOps, Image
 import cv2
 import numpy as np
@@ -37,6 +39,10 @@ class Ui_MainWindow(object):
         self.folder_name = []
         self.masks = []
         self.mask_folder = []
+        self.newMask = []
+        self.normImage = []
+        self.image_path = []
+        self.mask_path = []
         # self.output_dir = os.path.abspath('..\\greyscale_images')
 
     def setupUi(self, MainWindow):
@@ -229,6 +235,8 @@ class Ui_MainWindow(object):
         self.showButton.clicked.connect(lambda: self.showImages())
         self.loadMaskButton.clicked.connect(lambda: self.getMask())
         self.loadMaskFolderButton.clicked.connect(lambda: self.getMaskFolder())
+        self.generateSegButton.clicked.connect(lambda: self.chooseSegmentation())
+        self.generateNormButton.clicked.connect(lambda: self.chooseNormalization())
         self.csvButton.clicked.connect((lambda: self.radiomics()))
 
 
@@ -242,6 +250,7 @@ class Ui_MainWindow(object):
             # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             self.images.append(image)
             self.image_name.append(name)
+            self.image_path.append(filePath)
 
     def getFolder(self):
         # Open window to choose file
@@ -269,6 +278,7 @@ class Ui_MainWindow(object):
             mask = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
             #name = os.path.basename(filePath)
             self.masks.append(mask)
+            self.mask_path.append(filePath)
 
 
     def getMaskFolder(self):
@@ -297,11 +307,35 @@ class Ui_MainWindow(object):
         else:
             print("No files selected.")
 
+    def chooseSegmentation(self):
+        segmentation = Segmentation()
+        if self.area1Button.isChecked():
+            new_mask_sitk = segmentation.area1Mask(self.masks)
+            self.newMask.extend(new_mask_sitk)
+        elif self.area2Button.isChecked():
+            new_mask_sitk = segmentation.area2Mask(self.masks)
+            self.newMask.extend(new_mask_sitk)
+        elif self.bothButton.isChecked():
+            new_mask_sitk = segmentation.bothMask(self.masks)
+            self.newMask.extend(new_mask_sitk)
 
+    def chooseNormalization(self):
+        normalization = Normalize()
+        if self.minMaxButton.isChecked():
+            new_image = normalization.minMaxNormalization()
+            self.normImage.extend(new_image)
+        elif self.area2Button.isChecked():
+            new_mask_sitk = segmentation.area2Mask(self.masks)
+        elif self.bothButton.isChecked():
+            new_mask_sitk = segmentation.bothMask(self.masks)
+            #self.newMask.extend(new_mask_sitk)
 
     def radiomics(self):
-        if self.radioButton.isChecked():
-            extractRadiomics(self.images)
+        radiomics = Radiomics()
+        if self.noNormaButton.isChecked():
+            radiomics.extractRadiomics(self.images, self.newMask, self.image_path, self.image_name)
+        else:
+            radiomics.extractRadiomics(self.normImage, self.newMask, self.image_path, self.image_name)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
