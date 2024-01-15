@@ -11,51 +11,61 @@ class Radiomics:
 
 
     def __init__(self):
-        self.output_path = "D:\Repo\RadiomicApp\Code\outputs3\cechy.csv"
+        self.output_path = "D:\Repo\RadiomicApp\Code\outputs3"
 
     def extractRadiomics(self, image, mask, image_name, img_path):
+        n = len(image)
 
-        output_dir = "D:\Repo\RadiomicApp\Code\outputs3"
-
-        mask_image_sitk = sitk.GetImageFromArray(mask)
-        prostate_image_sitk = sitk.GetImageFromArray(image)
-
-        prostate_image_sitk.CopyInformation(sitk.ReadImage(img_path, sitk.sitkUInt8))
-
+        # Initialize the feature extractor
         extractor = featureextractor.RadiomicsFeatureExtractor()
         extractor.enableAllFeatures()
 
-        names = []
-        features = []
+        extractor.enableImageTypeByName('LoG')
+        extractor.enableImageTypeByName('Wavelet')
+        extractor.enableImageTypeByName('Square')
+        extractor.enableImageTypeByName('SquareRoot')
+        extractor.enableImageTypeByName('Logarithm')
+        extractor.enableImageTypeByName('Exponential')
+        #localBinaryPatern, Gradient,Histogram, walvet, log, squareRoot
+
+        filenames = {
+            'original_': os.path.join(self.output_path, 'original.csv'),
+            'log_': os.path.join(self.output_path, 'log.csv'),
+            'wavelet_': os.path.join(self.output_path, 'walwet.csv'),
+            'square_': os.path.join(self.output_path, 'square.csv'),
+            'squareRoot_': os.path.join(self.output_path, 'squareRoot.csv'),
+            'logarithm_': os.path.join(self.output_path, 'logarithm.csv'),
+            'exponential_': os.path.join(self.output_path, 'expo.csv')
+        }
+
+        dfs = {key: pd.DataFrame() for key in filenames}
+
+        # Iterate over each image/mask pair
+        for i in range(n):
+            # Convert the numpy arrays to SimpleITK images
+            mask_image_sitk = sitk.GetImageFromArray(mask[i])
+            prostate_image_sitk = sitk.GetImageFromArray(image[i])
+
+            # Copy meta information from the loaded image
+            prostate_image_sitk.CopyInformation(sitk.ReadImage(img_path[i], sitk.sitkUInt8))
+
+            # Execute feature extraction
+            results = extractor.execute(prostate_image_sitk, mask_image_sitk)
+            for image_type, filename in filenames.items():
+                features = {k: results[k] for k in results if k.startswith(image_type)}
+                if features:
+                    features_with_image = {'Image': image_name[i], **features}
+                    df = pd.DataFrame(features_with_image, index=[0])
+
+                    # Append to the DataFrame for the current image type
+                    dfs[image_type] = dfs[image_type]._append(df, ignore_index=True)
 
 
-        for feature_name, feature_value in extractor.execute(prostate_image_sitk, mask_image_sitk).items():
-            if feature_name.startswith("original_"):
-                names.append(feature_name)
-                features.append(feature_value)
-
-        names_l = list(names)
-        fig, ax = plt.subplots(figsize=[24, 5])
-        plt.plot(features, color='red')
-        plt.yscale('log')
-        plt.xticks(range(len(names_l)), names_l, rotation=90, ha="right")
-        plt.subplots_adjust(wspace=10)
-        plt.title("Radiomic Feature Values");
-        output_path = os.path.join(output_dir, 'example_radiomics.png')
-        plt.savefig(output_path, bbox_inches='tight', dpi=100)
-
-        names.insert(0, "Image")
-        features.insert(0, image_name)
-        df = pd.DataFrame([features], columns=names)
-        df = pd.DataFrame({'Feature Name': names, 'Feature Value': features})
-
-        def make_pretty(styler):
-            styler.background_gradient(axis=None, cmap="viridis")
-            return styler
-
-        styled_df = df.style.pipe(make_pretty)
-
-        df.to_csv(self.output_path, index=False)
+        for image_type, df in dfs.items():
+            if i == 0:
+                df.to_csv(filenames[image_type], mode='w', index=False)
+            else:
+                df.to_csv(filenames[image_type], mode='a', header=False, index=False)
 
 
-        return styled_df
+

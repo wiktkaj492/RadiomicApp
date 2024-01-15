@@ -238,8 +238,8 @@ class Ui_MainWindow(object):
         self.loadMaskFolderButton.clicked.connect(lambda: self.getMaskFolder())
         self.generateSegButton.clicked.connect(lambda: self.chooseSegmentation())
         self.generateNormButton.clicked.connect(lambda: self.chooseNormalization())
-        #self.csvButton.clicked.connect(lambda: self.radiomics())
-        self.csvButton.clicked.connect(lambda: self.extractRadiomics())
+        self.csvButton.clicked.connect(lambda: self.radiomics())
+        #self.csvButton.clicked.connect(lambda: self.extractRadiomics())
 
 
     def getFile(self):
@@ -280,9 +280,6 @@ class Ui_MainWindow(object):
 
         for filePath in self.filePath:
             mask = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-            #name = os.path.basename(filePath)
-            #mask[mask < args.object] = 0
-            #mask[mask >= args.object] = 1
             self.masks.append(mask)
             self.mask_path.append(filePath)
 
@@ -339,16 +336,16 @@ class Ui_MainWindow(object):
     def radiomics(self):
         radiomics = Radiomics()
         if self.noNormaButton.isChecked():
-            radiomics.extractRadiomics(self.images, self.newMask, self.image_path, self.image_name)
+            radiomics.extractRadiomics(self.images, self.newMask, self.image_name, self.image_path)
         else:
-            radiomics.extractRadiomics(self.normImage, self.newMask, self.image_path, self.image_name)
+            radiomics.extractRadiomics(self.normImage, self.newMask, self.image_name, self.image_path)
 
     def extractRadiomics(self):
         radiomics = Radiomics()
         if self.images:
             radiomics.extractRadiomics(self.images, self.masks, self.image_name, self.image_path)
         elif self.image_folder:
-            radiomics.extractRadiomics(self.image_folder, self.mask_folder, self.folder_name, self.folder_path)
+            radiomics.extractRadiomics(self.image_folder, self.mask_folder, self.image_name, self.folder_path)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
