@@ -20,6 +20,7 @@ from Code.data import CustomDataset
 from Code.mask import Segmentation
 from Code.normalize import Normalize
 from Code.pyRadiomics import Radiomics
+from Code.ROI import ROI
 from PIL import ImageOps, Image
 import cv2
 import numpy as np
@@ -44,6 +45,8 @@ class Ui_MainWindow(object):
         self.image_path = []
         self.mask_path = []
         self.folder_path = []
+        self.roiImage = []
+        self.roiMask = []
         # self.output_dir = os.path.abspath('..\\greyscale_images')
 
     def setupUi(self, MainWindow):
@@ -237,6 +240,7 @@ class Ui_MainWindow(object):
         self.loadMaskButton.clicked.connect(lambda: self.getMask())
         self.loadMaskFolderButton.clicked.connect(lambda: self.getMaskFolder())
         self.generateSegButton.clicked.connect(lambda: self.chooseSegmentation())
+        self.roiButton.clicked.connect(lambda: self.getROI())
         self.generateNormButton.clicked.connect(lambda: self.chooseNormalization())
         self.csvButton.clicked.connect(lambda: self.radiomics())
         #self.csvButton.clicked.connect(lambda: self.extractRadiomics())
@@ -273,7 +277,6 @@ class Ui_MainWindow(object):
         else:
             print("Empty directory")
 
-
     def getMask(self):
         # Open window to choose file
         self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}", "Formats: (*.png )")
@@ -282,7 +285,6 @@ class Ui_MainWindow(object):
             mask = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
             self.masks.append(mask)
             self.mask_path.append(filePath)
-
 
     def getMaskFolder(self):
         # Open window to choose file
@@ -295,7 +297,7 @@ class Ui_MainWindow(object):
                 filePath = os.path.join(self.folderPath, fileName)
                 if fileName.lower().endswith(('.png')):
                     maskF = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-                    #nameFolder = os.path.basename(self.folderPath)
+                    # nameFolder = os.path.basename(self.folderPath)
                     self.mask_folder.append(maskF)
         else:
             print("Empty directory")
@@ -319,8 +321,24 @@ class Ui_MainWindow(object):
             new_mask_sitk = segmentation.area2Mask(self.masks)
             self.newMask.extend(new_mask_sitk)
         elif self.bothButton.isChecked():
-            new_mask_sitk = segmentation.bothMask(self.masks)
+            new_mask_sitk = segmentation.segmentationMask(self.masks, [1, 2])
             self.newMask.extend(new_mask_sitk)
+
+    def getROI(self):
+        roi = ROI()
+
+        for image, mask in zip(self.images, self.newMask):
+            roiImg, roiMask = roi.roiImage(image, mask)
+            self.roiImage.append(roiImg)
+            self.roiMask.append(roiMask)
+
+            print(f"Image shape: {roiImg.shape}")
+            print(f"Mask shape: {roiMask.shape}")
+            
+            print(f"self.roiImage: {self.roiImage}")
+            print(f"self.roiMask: {self.roiMask}")
+            
+
 
     def chooseNormalization(self):
         normalization = Normalize()
@@ -331,12 +349,13 @@ class Ui_MainWindow(object):
             new_mask_sitk = segmentation.area2Mask(self.masks)
         elif self.bothButton.isChecked():
             new_mask_sitk = segmentation.bothMask(self.masks)
-            #self.newMask.extend(new_mask_sitk)
+            # self.newMask.extend(new_mask_sitk)
 
     def radiomics(self):
         radiomics = Radiomics()
         if self.noNormaButton.isChecked():
-            radiomics.extractRadiomics(self.images, self.newMask, self.image_name, self.image_path)
+            print("self.noNormaButton.isChecked():")
+            radiomics.extractRadiomics(self.roiImage, self.roiMask, self.image_name, self.image_path)
         else:
             radiomics.extractRadiomics(self.normImage, self.newMask, self.image_name, self.image_path)
 

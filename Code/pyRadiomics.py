@@ -13,8 +13,7 @@ class Radiomics:
     def __init__(self):
         self.output_path = "D:\Repo\RadiomicApp\Code\outputs3"
 
-    def extractRadiomics(self, image, mask, image_name, img_path):
-        n = len(image)
+    def extractRadiomics(self, images, masks, image_names, img_paths):
 
         # Initialize the feature extractor
         extractor = featureextractor.RadiomicsFeatureExtractor()
@@ -41,27 +40,31 @@ class Radiomics:
         dfs = {key: pd.DataFrame() for key in filenames}
 
         # Iterate over each image/mask pair
-        for i in range(n):
+        for image, mask, img_path, image_name in zip(images, masks, img_paths, image_names):
+            print(f"extractRadiomics mask shape: {mask.shape}")
+            print(f"extractRadiomics image shape: {image.shape}")
+
             # Convert the numpy arrays to SimpleITK images
-            mask_image_sitk = sitk.GetImageFromArray(mask[i])
-            prostate_image_sitk = sitk.GetImageFromArray(image[i])
+            mask_image_sitk = sitk.GetImageFromArray(mask)
+            prostate_image_sitk = sitk.GetImageFromArray(image)
 
             # Copy meta information from the loaded image
-            prostate_image_sitk.CopyInformation(sitk.ReadImage(img_path[i], sitk.sitkUInt8))
+            #prostate_image_sitk.CopyInformation(sitk.ReadImage(img_path, sitk.sitkUInt8))
+
+
 
             # Execute feature extraction
             results = extractor.execute(prostate_image_sitk, mask_image_sitk)
             for image_type, filename in filenames.items():
                 features = {k: results[k] for k in results if k.startswith(image_type)}
                 if features:
-                    features_with_image = {'Image': image_name[i], **features}
+                    features_with_image = {'Image': image_name, **features}
                     df = pd.DataFrame(features_with_image, index=[0])
 
                     # Append to the DataFrame for the current image type
                     dfs[image_type] = dfs[image_type]._append(df, ignore_index=True)
 
-
-        for image_type, df in dfs.items():
+        for i, (image_type, df) in enumerate(dfs.items()):
             if i == 0:
                 df.to_csv(filenames[image_type], mode='w', index=False)
             else:
