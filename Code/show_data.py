@@ -13,7 +13,7 @@ def showData(image, name ):
     output_dir = os.path.abspath('..\\outputs3')
     os.makedirs(output_dir, exist_ok=True)
 
-    plt.figure(figsize=[15, 5])
+    plt.figure(figsize=[70, 5])
     for i in range(n):
 
         if isinstance(image[i], str):
