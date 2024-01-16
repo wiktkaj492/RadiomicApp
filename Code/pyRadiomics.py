@@ -7,13 +7,14 @@ import pandas as pd
 import os
 
 
-class Radiomics:
-
+class Radiomics(object):
 
     def __init__(self):
-        self.output_path = "D:\Repo\RadiomicApp\Code\outputs3"
+        self.output_path = "..\\Result"
+        os.makedirs(self.output_path, exist_ok=True)
 
-    def extractRadiomics(self, images, masks, image_names, img_paths):
+
+    def extractRadiomics(self, images, masks, image_names):
 
         # Initialize the feature extractor
         extractor = featureextractor.RadiomicsFeatureExtractor()
@@ -40,17 +41,13 @@ class Radiomics:
         dfs = {key: pd.DataFrame() for key in filenames}
 
         # Iterate over each image/mask pair
-        for image, mask, img_path, image_name in zip(images, masks, img_paths, image_names):
+        for image, mask, image_name in zip(images, masks, image_names):
             print(f"extractRadiomics mask shape: {mask.shape}")
             print(f"extractRadiomics image shape: {image.shape}")
 
             # Convert the numpy arrays to SimpleITK images
             mask_image_sitk = sitk.GetImageFromArray(mask)
             prostate_image_sitk = sitk.GetImageFromArray(image)
-
-            # Copy meta information from the loaded image
-            #prostate_image_sitk.CopyInformation(sitk.ReadImage(img_path, sitk.sitkUInt8))
-
 
 
             # Execute feature extraction
@@ -64,11 +61,9 @@ class Radiomics:
                     # Append to the DataFrame for the current image type
                     dfs[image_type] = dfs[image_type]._append(df, ignore_index=True)
 
-        for i, (image_type, df) in enumerate(dfs.items()):
-            if i == 0:
+        for image_type, df in dfs.items():
                 df.to_csv(filenames[image_type], mode='w', index=False)
-            else:
-                df.to_csv(filenames[image_type], mode='a', header=False, index=False)
+
 
 
 

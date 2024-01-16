@@ -36,18 +36,17 @@ class Ui_MainWindow(object):
         self.currentDir = os.getcwd()
         self.images = []
         self.image_name = []
-        self.image_folder = []
-        self.folder_name = []
-        self.masks = []
-        self.mask_folder = []
-        self.newMask = []
-        self.normImage = []
         self.image_path = []
-        self.mask_path = []
+        self.folder_name = []
         self.folder_path = []
+        self.masks = []
+        self.mask_path = []
+        self.mask_folder = []
+        self.newMasks = []
+        self.newMaskFolder = []
+        self.normImage = []
         self.roiImage = []
         self.roiMask = []
-        # self.output_dir = os.path.abspath('..\\greyscale_images')
 
     def setupUi(self, MainWindow):
         self.window = MainWindow
@@ -272,7 +271,7 @@ class Ui_MainWindow(object):
                 if fileName.lower().endswith(('.png')):
                     image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
                     nameFolder = os.path.basename(self.folderPath)
-                    self.image_folder.append(image)
+                    self.images.append(image)
                     self.folder_name.append(nameFolder)
         else:
             print("Empty directory")
@@ -298,7 +297,7 @@ class Ui_MainWindow(object):
                 if fileName.lower().endswith(('.png')):
                     maskF = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
                     # nameFolder = os.path.basename(self.folderPath)
-                    self.mask_folder.append(maskF)
+                    self.masks.append(maskF)
         else:
             print("Empty directory")
 
@@ -306,38 +305,35 @@ class Ui_MainWindow(object):
         if self.images:
             print("Number of images:", len(self.images))
             showData(self.images, self.image_name)
-        elif self.image_folder:
-            print("Number of images in the folder:", len(self.image_folder))
-            showData(self.image_folder, self.image_name)
         else:
             print("No files selected.")
 
     def chooseSegmentation(self):
         segmentation = Segmentation()
         if self.area1Button.isChecked():
-            new_mask_sitk = segmentation.area1Mask(self.masks)
-            self.newMask.extend(new_mask_sitk)
+            new_mask_sitk = segmentation.segmentationMask(self.masks, [1])
+            self.newMasks.extend(new_mask_sitk)
         elif self.area2Button.isChecked():
-            new_mask_sitk = segmentation.area2Mask(self.masks)
-            self.newMask.extend(new_mask_sitk)
+            new_mask_sitk = segmentation.segmentationMask(self.masks, [2])
+            self.newMasks.extend(new_mask_sitk)
         elif self.bothButton.isChecked():
             new_mask_sitk = segmentation.segmentationMask(self.masks, [1, 2])
-            self.newMask.extend(new_mask_sitk)
+            self.newMasks.extend(new_mask_sitk)
+
 
     def getROI(self):
         roi = ROI()
-
-        for image, mask in zip(self.images, self.newMask):
+        for image, mask in zip(self.images, self.newMasks):
             roiImg, roiMask = roi.roiImage(image, mask)
             self.roiImage.append(roiImg)
             self.roiMask.append(roiMask)
 
             print(f"Image shape: {roiImg.shape}")
             print(f"Mask shape: {roiMask.shape}")
-            
+
             print(f"self.roiImage: {self.roiImage}")
             print(f"self.roiMask: {self.roiMask}")
-            
+
 
 
     def chooseNormalization(self):
@@ -355,16 +351,18 @@ class Ui_MainWindow(object):
         radiomics = Radiomics()
         if self.noNormaButton.isChecked():
             print("self.noNormaButton.isChecked():")
-            radiomics.extractRadiomics(self.roiImage, self.roiMask, self.image_name, self.image_path)
+            radiomics.extractRadiomics(self.roiImage, self.roiMask, self.image_name)
         else:
-            radiomics.extractRadiomics(self.normImage, self.newMask, self.image_name, self.image_path)
+            radiomics.extractRadiomics(self.normImage, self.newMask, self.image_name)
 
+    """
     def extractRadiomics(self):
         radiomics = Radiomics()
         if self.images:
             radiomics.extractRadiomics(self.images, self.masks, self.image_name, self.image_path)
         elif self.image_folder:
             radiomics.extractRadiomics(self.image_folder, self.mask_folder, self.image_name, self.folder_path)
+    """
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
