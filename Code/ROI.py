@@ -19,10 +19,14 @@ class ROI(object):
             plt.close()
 
     def roiImage(self, image: np.ndarray, mask: np.ndarray) -> np.ndarray:
+
         # Find the coordinates of non-zero values in the mask
         print(image.shape)
         coords = np.argwhere(mask)
         print(coords.shape)
+        if coords.size == 0:
+            # Handle the empty case (e.g., return the original image and mask or raise an error)
+            return image, mask
         # Find the bounding box of the non-zero values in the mask
         min_y, min_x = coords.min(axis=0)
         max_y, max_x = coords.max(axis=0)
