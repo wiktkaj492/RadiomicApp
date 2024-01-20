@@ -267,6 +267,7 @@ class Ui_MainWindow(object):
             print(f"Masks: {len(self.masks)}")
 
     def getMaskFolder(self):
+
         # Open window to choose file
         self.folderPath = QFileDialog.getExistingDirectory(self.window, 'Choose a patient Directory', "${HOME}")
 
@@ -295,11 +296,9 @@ class Ui_MainWindow(object):
     def chooseSegmentation(self):
         segmentation = Segmentation()
         message = ""
-        empty_masks = []
         if self.area1Button.isChecked():
             new_mask_sitk = segmentation.segmentationMask(self.masks, [1])
             self.newMasks.extend(new_mask_sitk)
-            empty_masks.extend(empty_masks)
             message = "Sucessful! New mask/masks created"
             print(f"New Masks: {len(self.newMasks)}")
             #print(f"Empty Masks: {len(empty_masks)}")
@@ -342,14 +341,19 @@ class Ui_MainWindow(object):
 
     def chooseNormalization(self):
         normalization = Normalize()
-        if self.minMaxButton.isChecked():
-            new_image = normalization.minMaxNormalization(self.roiImages, self.roiMasks)
-            self.normImages.extend(new_image)
-        elif self.area2Button.isChecked():
-            new_mask_sitk = segmentation.area2Mask(self.masks)
-        elif self.bothButton.isChecked():
-            new_mask_sitk = segmentation.bothMask(self.masks)
-            #self.newMask.extend(new_mask_sitk)
+        for (image, image_path, mask) in self.roiImages:
+            if self.minMaxButton.isChecked():
+                new_image = normalization.minMaxNormalization(image, mask)
+                print(f"normImage: {new_image.shape}")
+                self.normImages.append((new_image,image_path, mask))
+            elif self.meanStdButton.isChecked():
+                new_image = normalization.minMaxNormalization(image, mask)
+                print(f"normImage: {new_image.shape}")
+                self.normImages.append((new_image, image_path, mask))
+            elif self.perButton.isChecked():
+                new_image = normalization.minMaxNormalization(image, mask)
+                print(f"normImage: {new_image.shape}")
+                self.normImages.append((new_image, image_path, mask))
 
     def radiomics(self):
         radiomics = Radiomics()
@@ -359,7 +363,7 @@ class Ui_MainWindow(object):
             radiomics.extractRadiomics(self.roiImages)
             messageRadiomic = "CSV files created "
         else:
-            radiomics.extractRadiomics(self.normImage)
+            radiomics.extractRadiomics(self.normImages)
             messageRadiomic = "CSV files created "
         self.csvStatusLabel.setText(messageRadiomic)
 

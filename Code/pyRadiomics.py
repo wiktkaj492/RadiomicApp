@@ -14,7 +14,8 @@ import os
 class Radiomics(object):
 
     def __init__(self):
-        self.output_path = "..\\Result"
+        base_path = os.path.abspath(os.path.join("..", ".."))
+        self.output_path = os.path.join(base_path, "Results")
         os.makedirs(self.output_path, exist_ok=True)
 
 
@@ -25,14 +26,13 @@ class Radiomics(object):
         extractor.enableAllFeatures()
 
         params = {
-            'LoG': {},  # Laplacian of Gaussian uses default settings
-            'Wavelet': {},  # Wavelet uses default settings
+            'LoG': {'sigma' : (1.0, 2.0, 3.0, 4.0, 5.0)},  # Laplacian of Gaussian uses default settings
+            'Wavelet': {'binWidth': 3.0},  # Wavelet uses default settings
             'Square': {},  # Square image filter
             'SquareRoot': {},  # Square root image filter
             'Exponential': {},  # Exponential image filter
             'Logarithm': {},  # Logarithm image filter
-            'LBP2D': {},  # Local Binary Pattern 2D
-            'LBP3D': {},  # Local Binary Pattern 3D
+            'LBP2D': {'binWidth': 0.2},  # Local Binary Pattern 2D
         }
         #localBinaryPatern, Gradient,Histogram, walvet, log, squareRoot
 
@@ -48,7 +48,6 @@ class Radiomics(object):
             'logarithm_': os.path.join(self.output_path, 'logarithm.csv'),
             'exponential_': os.path.join(self.output_path, 'expo.csv'),
             'lbp2d_': os.path.join(self.output_path, 'lbp2d.csv'),
-            'lbp3d_': os.path.join(self.output_path, 'lbp3d.csv'),
         }
 
         dfs = {key: pd.DataFrame() for key in filenames}
