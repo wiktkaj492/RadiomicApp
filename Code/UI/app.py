@@ -18,7 +18,7 @@ from pathlib import Path
 from Code.show_data import showData
 from Code.data import CustomDataset
 from Code.mask import Segmentation
-from Code.normalize import Normalize
+from Code.normalize import MinMaxNormalization, MeanStdNormalization, PercentileNormalization
 from Code.pyRadiomics import Radiomics
 from Code.ROI import ROI
 from PIL import ImageOps, Image
@@ -33,12 +33,12 @@ class Ui_MainWindow(object):
         self.filePath = ''
         self.folderPath = ''
         self.currentDir = os.getcwd()
-        self.images = []
-        self.images_names = []
-        self.images_paths = []
+        self.input_images = []
+        self.input_images_names = []
+        self.input_images_paths = []
         self.folders_paths = []
-        self.masks = []
-        self.mask_path = []
+        self.input_masks = []
+        self.input_mask_path = []
         self.mask_folder = []
         self.newMasks = []
         self.newMaksNumber = []
@@ -221,7 +221,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.loadDataButton.clicked.connect(lambda: self.getFile())
         self.LoadFolderButton.clicked.connect(lambda: self.getFolder())
-        self.showButton.clicked.connect(lambda: self.showImages())
+        #self.showButton.clicked.connect(lambda: self.showImages())
         self.loadMaskButton.clicked.connect(lambda: self.getMask())
         self.loadMaskFolderButton.clicked.connect(lambda: self.getMaskFolder())
         self.generateSegButton.clicked.connect(lambda: self.chooseSegmentation())
@@ -235,11 +235,12 @@ class Ui_MainWindow(object):
 
         for filePath in self.filePath:
             image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-            #name = os.path.basename(filePath)
+            name = os.path.basename(filePath)
             # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            self.images.append((image, filePath))
+            self.input_images.append((image, filePath))
+            self.input_images_names.append(name)
 
-            print(f"Image: {len(self.images)}")
+            print(f"Image: {len(self.input_images)}")
 
     def getFolder(self):
         # Open window to choose file
@@ -251,8 +252,8 @@ class Ui_MainWindow(object):
                     if fileName.lower().endswith(('.png')):
                         filePath = os.path.join(root, fileName)
                         image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-                        self.images.append((image, filePath))
-                        print(f"Image: {len(self.images)}")
+                        self.input_images.append((image, filePath))
+                        print(f"Image: {len(self.input_images)}")
         else:
             print("Empty directory")
 
@@ -262,9 +263,9 @@ class Ui_MainWindow(object):
 
         for filePath in self.filePath:
             mask = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-            self.masks.append(mask)
-            self.mask_path.append(filePath)
-            print(f"Masks: {len(self.masks)}")
+            self.input_masks.append(mask)
+            self.input_mask_path.append(filePath)
+            print(f"Masks: {len(self.input_masks)}")
 
     def getMaskFolder(self):
 
@@ -279,17 +280,17 @@ class Ui_MainWindow(object):
                         filePath = os.path.join(root, fileName)
                         maskF = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
                         #nameFolder = os.path.basename(self.folderPath)
-                        self.masks.append(maskF)
-                        self.mask_path.append(filePath)
-                        print(f"Masks Folder: {len(self.masks)}")
+                        self.input_masks.append(maskF)
+                        self.input_mask_path.append(filePath)
+                        print(f"Masks Folder: {len(self.input_masks)}")
         else:
             print("Empty directory")
 
     def showImages(self):
         if self.images:
-            print("Number of images:", len(self.images))
+            print("Number of images:", len(self.input_images))
             # e[0] - images, e[1] - images_paths
-            showData([e[0] for e in self.images], [e[1] for e in self.images])
+            showData([e[0] for e in self.input_images], [e[1] for e in self.input_images])
         else:
             print("No files selected.")
 
@@ -297,17 +298,17 @@ class Ui_MainWindow(object):
         segmentation = Segmentation()
         message = ""
         if self.area1Button.isChecked():
-            new_mask_sitk = segmentation.segmentationMask(self.masks, [1])
+            new_mask_sitk = segmentation.segmentationMask(self.input_masks, [1])
             self.newMasks.extend(new_mask_sitk)
             message = "Sucessful! New mask/masks created"
             print(f"New Masks: {len(self.newMasks)}")
             #print(f"Empty Masks: {len(empty_masks)}")
         elif self.area2Button.isChecked():
-            new_mask_sitk = segmentation.segmentationMask(self.masks, [2])
+            new_mask_sitk = segmentation.segmentationMask(self.input_masks, [2])
             self.newMasks.extend(new_mask_sitk)
             message = "Sucessful! New mask/masks created"
         elif self.bothButton.isChecked():
-            new_mask_sitk = segmentation.segmentationMask(self.masks, [1, 2])
+            new_mask_sitk = segmentation.segmentationMask(self.input_masks, [1, 2])
             self.newMasks.extend(new_mask_sitk)
             message = "Sucessful! New mask/masks created"
         self.statusMaskLabel.setText(message)
@@ -317,7 +318,7 @@ class Ui_MainWindow(object):
         empty_masks = []
         empty_masks_images = []
         messageROI = ""
-        for (image, image_path), mask in zip(self.images, self.newMasks):
+        for (image, image_path), mask in zip(self.input_images, self.newMasks):
             if np.all(mask == 0):
                 empty_masks.append(mask)
                 empty_masks_images.append(image_path)
@@ -338,43 +339,37 @@ class Ui_MainWindow(object):
                 #print(f"ROI Mask: {len(self.roiMasks)}")
                 #print(f"ROI Images: {len(self.roiImages)}")
 
-
     def chooseNormalization(self):
-        normalization = Normalize()
+        # Strategy instances
+        min_max_normalization = MinMaxNormalization()
+        mean_std_normalization = MeanStdNormalization()
+        percentile_normalization = PercentileNormalization()
+
         for (image, image_path, mask) in self.roiImages:
             if self.minMaxButton.isChecked():
-                new_image = normalization.minMaxNormalization(image, mask)
-                print(f"normImage: {new_image.shape}")
-                self.normImages.append((new_image,image_path, mask))
+                new_image = min_max_normalization.normalize(image, mask)
             elif self.meanStdButton.isChecked():
-                new_image = normalization.minMaxNormalization(image, mask)
-                print(f"normImage: {new_image.shape}")
-                self.normImages.append((new_image, image_path, mask))
+                new_image = mean_std_normalization.normalize(image, mask)
             elif self.perButton.isChecked():
-                new_image = normalization.minMaxNormalization(image, mask)
-                print(f"normImage: {new_image.shape}")
-                self.normImages.append((new_image, image_path, mask))
+                new_image = percentile_normalization.normalize(image, mask)
+
+            print(f"normImage: {new_image.shape}")
+            self.normImages.append((new_image, image_path, mask))
 
     def radiomics(self):
         radiomics = Radiomics()
         messageRadiomic = ""
+        base_path = os.path.abspath(os.path.join("..", ".."))
+        self.output_path = os.path.join(base_path, "Results")
+        os.makedirs(self.output_path, exist_ok=True)
         if self.noNormaButton.isChecked():
             print("self.noNormaButton.isChecked():")
-            radiomics.extractRadiomics(self.roiImages)
+            radiomics.extractRadiomics(self.roiImages, self.output_path)
             messageRadiomic = "CSV files created "
         else:
-            radiomics.extractRadiomics(self.normImages)
+            radiomics.extractRadiomics(self.normImages, self.output_path)
             messageRadiomic = "CSV files created "
         self.csvStatusLabel.setText(messageRadiomic)
-
-    """
-    def extractRadiomics(self):
-        radiomics = Radiomics()
-        if self.images:
-            radiomics.extractRadiomics(self.images, self.masks, self.image_name, self.image_path)
-        elif self.image_folder:
-            radiomics.extractRadiomics(self.image_folder, self.mask_folder, self.image_name, self.folder_path)
-    """
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

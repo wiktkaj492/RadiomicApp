@@ -3,10 +3,34 @@ import sys
 import numpy as np
 import SimpleITK as sitk
 import pandas as pd
+import matplotlib.pyplot as plt
 
-class Normalize(object):
+from abc import ABC, abstractmethod
 
-    def minMaxNormalization(self, roiImage, roiMask):
+
+# Strategy Interface
+class NormalizationStrategy(ABC):
+
+    @abstractmethod
+    def normalize(self, roiImage, roiMask):
+        pass
+
+    def save_debug_images(self, masks, filenames, folder="debug_images"):
+        # Create the folder if it doesn't exist
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        for mask, filename in zip(masks, filenames):
+            # Normalize and map the mask to a colormap for better visibility
+            plt.imshow(mask, cmap='viridis', interpolation='nearest')
+            plt.colorbar()
+            plt.savefig(os.path.join(folder, filename))
+            plt.close()
+
+# Concrete Strategy 1
+class MinMaxNormalization(NormalizationStrategy):
+
+    def normalize(self, roiImage, roiMask):
         # Convert the mask to boolean for indexing
         roiImage = np.array(roiImage, dtype=np.float64)
         roiMask = np.array(roiMask)
@@ -17,10 +41,10 @@ class Normalize(object):
         roi_values = roiImage[mask_bool]
 
         # Find the unique gray levels in the region of interest
-        #unique_levels = np.unique(roi_values)
-        #n = len(unique_levels)
+        # unique_levels = np.unique(roi_values)
+        # n = len(unique_levels)
 
-        #n_values = unique_levels[np.logical_and(unique_levels > 0, unique_levels < 8)]
+        # n_values = unique_levels[np.logical_and(unique_levels > 0, unique_levels < 8)]
 
         # Calculate the minimum and maximum values within the masked region
         min_val = roi_values.min()
@@ -30,7 +54,6 @@ class Normalize(object):
         if min_val == max_val:
             raise ValueError("The region of interest has only one unique gray level.")
 
-
         # Apply the normalization formula to the region of interest
         normalized_roi = ((roiImage[mask_bool] - min_val) / (max_val - min_val + 1))
 
@@ -39,21 +62,23 @@ class Normalize(object):
         n_bits = len(unique_levels).bit_length()
 
         # Ensure that n_bits is within the correct range
-        if not (0 < n_bits <= 8):
-            raise ValueError("n_bits must be in the range (0, 8].")
 
         # Quantization
         if n_bits != 8:
             # Calculate the scale factor based on the number of bits
-            scale_factor = 2 ** n_bits - 1
+            scale_factor = (2 ** n_bits) - 1
             # Apply quantization
             normalized_roi = (normalized_roi * scale_factor).round() / scale_factor
 
         # Map the normalized values to the range [0, 2^n_bits]
-        roiImage[mask_bool] = 2 ** n_bits * normalized_roi
+        roiImage[mask_bool] = (2 ** n_bits) * normalized_roi
+        self.save_debug_images([roiImage], ["norm_minmax"])
         return roiImage
 
-    def meanStdNormalization(self,roiImage, roiMask ):
+# Concrete Strategy 2
+class MeanStdNormalization(NormalizationStrategy):
+
+    def normalize(self, roiImage, roiMask):
         # Convert the mask to boolean for indexing
         roiImage = np.array(roiImage, dtype=np.float64)
         roiMask = np.array(roiMask)
@@ -78,24 +103,26 @@ class Normalize(object):
 
         # Find unique levels in the ROI values to determine n_bits
         unique_levels = np.unique(roi_values)
-        n_bits = len(unique_levels).bit_length()
+        # n_bits = len(unique_levels).bit_length()
 
         # Ensure that n_bits is within the correct range
-        if not (0 < n_bits <= 8):
-            raise ValueError("n_bits must be in the range (0, 8].")
 
         # Quantization
-        if n_bits != 8:
+        if unique_levels != 8:
             # Calculate the scale factor based on the number of bits
-            scale_factor = 2 ** n_bits - 1
+            scale_factor = (2 ** unique_levels) - 1
             # Apply quantization
             normalized_roi = (normalized_roi * scale_factor).round() / scale_factor
 
         # Map the normalized values to the range [0, 2^n_bits]
-        roiImage[mask_bool] = 2 ** n_bits * normalized_roi
+        roiImage[mask_bool] = (2 ** unique_levels) * normalized_roi
+        self.save_debug_images([roiImage], ["norm_meanstd"])
         return roiImage
 
-    def percentileNormalization(self, roiImage, roiMask):
+# Concrete Strategy 3
+class PercentileNormalization(NormalizationStrategy):
+
+    def normalize(self, roiImage, roiMask):
         # Convert the mask to boolean for indexing
         roiImage = np.array(roiImage, dtype=np.float64)
         roiMask = np.array(roiMask)
@@ -117,18 +144,20 @@ class Normalize(object):
 
         # Find unique levels in the ROI values to determine n_bits
         unique_levels = np.unique(roi_values)
-        n_bits = len(unique_levels).bit_length()
+        # n_bits = len(unique_levels).bit_length()
 
         # Ensure that n_bits is within the correct range
-        if not (0 < n_bits <= 8):
-            raise ValueError("n_bits must be in the range (0, 8].")
 
         # Quantization
-        if n_bits != 8:
-            scale_factor = 2 ** n_bits - 1
+        if unique_levels != 8:
+            scale_factor = 2 ** unique_levels - 1
             normalized_roi = (normalized_roi * scale_factor).round() / scale_factor
 
         # Map the normalized values to the range [0, 2^n_bits)
-        roiImage[mask_bool] = normalized_roi * (2 ** n_bits)
+        roiImage[mask_bool] = normalized_roi * (2 ** unique_levels)
+        self.save_debug_images([roiImage], ["norm_per"])
 
         return roiImage
+
+
+

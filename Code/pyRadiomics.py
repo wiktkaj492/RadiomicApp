@@ -13,13 +13,7 @@ import os
 
 class Radiomics(object):
 
-    def __init__(self):
-        base_path = os.path.abspath(os.path.join("..", ".."))
-        self.output_path = os.path.join(base_path, "Results")
-        os.makedirs(self.output_path, exist_ok=True)
-
-
-    def extractRadiomics(self, images):
+    def extractRadiomics(self, images, results_folder_path):
 
         # Initialize the feature extractor
         extractor = featureextractor.RadiomicsFeatureExtractor()
@@ -40,14 +34,14 @@ class Radiomics(object):
             extractor.enableImageTypeByName(image_type, customArgs=kwargs)
 
         filenames = {
-            'original_': os.path.join(self.output_path, 'original.csv'),
-            'log_': os.path.join(self.output_path, 'log.csv'),
-            'wavelet_': os.path.join(self.output_path, 'walwet.csv'),
-            'square_': os.path.join(self.output_path, 'square.csv'),
-            'squareRoot_': os.path.join(self.output_path, 'squareRoot.csv'),
-            'logarithm_': os.path.join(self.output_path, 'logarithm.csv'),
-            'exponential_': os.path.join(self.output_path, 'expo.csv'),
-            'lbp2d_': os.path.join(self.output_path, 'lbp2d.csv'),
+            'original_': os.path.join(results_folder_path, 'original.csv'),
+            'log_': os.path.join(results_folder_path, 'log.csv'),
+            'wavelet_': os.path.join(results_folder_path, 'walwet.csv'),
+            'square_': os.path.join(results_folder_path, 'square.csv'),
+            'squareRoot_': os.path.join(results_folder_path, 'squareRoot.csv'),
+            'logarithm_': os.path.join(results_folder_path, 'logarithm.csv'),
+            'exponential_': os.path.join(results_folder_path, 'expo.csv'),
+            'lbp2d_': os.path.join(results_folder_path, 'lbp2d.csv'),
         }
 
         dfs = {key: pd.DataFrame() for key in filenames}
