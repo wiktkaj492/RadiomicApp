@@ -48,7 +48,6 @@ class Segmentation(object):
 
     def bothMask(self, masks):
         new_mask_sitk = []
-        #empty_mask = []
         for segmentation_image in masks:
             unique_values = np.unique(segmentation_image)
             print("Unique values in the mask:", unique_values)
