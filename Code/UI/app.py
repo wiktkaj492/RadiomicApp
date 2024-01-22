@@ -15,8 +15,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from pathlib import Path
-from Code.show_data import showData
-from Code.data import CustomDataset
 from Code.mask import Segmentation
 from Code.normalize import NoNormalization, MinMaxNormalization, MeanStdNormalization, PercentileNormalization
 from Code.pyRadiomics import Radiomics
@@ -263,14 +261,13 @@ class Ui_MainWindow(object):
 
         for filePath in self.filePath:
             image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-            # name = os.path.basename(filePath)
-            # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            #name = os.path.basename(filePath)
+            #img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             self.input_images.append((image, filePath))
-            # self.input_images_names.append(name)
 
         self.loadDataList.addItems([name for _, name in self.input_images])
         self.csvStatusLabel_2.setText(f"Images: {len(self.input_images)}")
-        print(f"Image: {len(self.input_images)}")
+        #print(f"Image: {len(self.input_images)}")
 
     def getFolder(self):
         # Open window to choose file
@@ -410,7 +407,7 @@ class Ui_MainWindow(object):
         radiomics = Radiomics()
         messageRadiomic = ""
 
-        base_path = os.path.abspath(os.path.join("..", "..", ".."))
+        base_path = os.path.abspath(os.path.join("..", ".."))
         self.output_path = os.path.join(base_path, "Results")
         os.makedirs(self.output_path, exist_ok=True)
 
