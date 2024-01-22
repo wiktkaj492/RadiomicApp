@@ -119,7 +119,7 @@ class Ui_MainWindow(object):
         self.roiButton.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.roiButton.setObjectName("roiButton")
         self.statusMaskLabel = QtWidgets.QLabel(self.widget)
-        self.statusMaskLabel.setGeometry(QtCore.QRect(330, 200, 231, 31))
+        self.statusMaskLabel.setGeometry(QtCore.QRect(330, 90, 231, 31))
         self.statusMaskLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.statusMaskLabel.setStyleSheet("")
         self.statusMaskLabel.setFrameShape(QtWidgets.QFrame.Panel)
@@ -128,7 +128,7 @@ class Ui_MainWindow(object):
         self.statusMaskLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.statusMaskLabel.setObjectName("statusMaskLabel")
         self.statusROILabel = QtWidgets.QLabel(self.widget)
-        self.statusROILabel.setGeometry(QtCore.QRect(330, 90, 231, 31))
+        self.statusROILabel.setGeometry(QtCore.QRect(330, 200, 231, 31))
         self.statusROILabel.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.statusROILabel.setStyleSheet("")
         self.statusROILabel.setFrameShape(QtWidgets.QFrame.Panel)
@@ -263,10 +263,10 @@ class Ui_MainWindow(object):
 
         for filePath in self.filePath:
             image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-            #name = os.path.basename(filePath)
+            # name = os.path.basename(filePath)
             # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             self.input_images.append((image, filePath))
-            #self.input_images_names.append(name)
+            # self.input_images_names.append(name)
 
         self.loadDataList.addItems([name for _, name in self.input_images])
         self.csvStatusLabel_2.setText(f"Images: {len(self.input_images)}")
@@ -275,7 +275,6 @@ class Ui_MainWindow(object):
     def getFolder(self):
         # Open window to choose file
         self.folderPath = QFileDialog.getExistingDirectory(self.window, 'Choose a patient Directory', "${HOME}")
-
 
         if self.folderPath:
             for root, dirs, files in os.walk(self.folderPath):
@@ -290,7 +289,6 @@ class Ui_MainWindow(object):
             self.loadDataList.addItems([name for _, name in self.input_images])
         else:
             QMessageBox.warning(self.window, "No Images Selected", "Please select patient directory.")
-
 
     def getMask(self):
         # Open window to choose file
@@ -351,10 +349,11 @@ class Ui_MainWindow(object):
 
         if new_mask_sitk is not None:
             self.newMasks.extend(new_mask_sitk)
-            #print(f"New Masks: {len(self.newMasks)}")
+            # print(f"New Masks: {len(self.newMasks)}")
             message = "Successful! New mask/masks created"
         else:
-            QMessageBox.warning(self.window, "No Region Selected", "No region selected for mask. Please select a region.")
+            QMessageBox.warning(self.window, "No Region Selected",
+                                "No region selected for mask. Please select a region.")
 
         self.statusMaskLabel.setText(message)
 
@@ -380,8 +379,6 @@ class Ui_MainWindow(object):
             self.statusROILabel.setText(messageROI)
             self.emptyMasksList.addItems(empty_masks_images)
 
-
-
     def chooseNormalization(self):
         no_normalization = NoNormalization()
         min_max_normalization = MinMaxNormalization()
@@ -402,7 +399,7 @@ class Ui_MainWindow(object):
                 new_image = percentile_normalization.normalize(image, mask)
                 normalization_selected = True
 
-            #print(f"normImage: {new_image.shape}")
+            # print(f"normImage: {new_image.shape}")
             self.normImages.append((new_image, image_path, mask))
 
         if not normalization_selected:
@@ -413,7 +410,7 @@ class Ui_MainWindow(object):
         radiomics = Radiomics()
         messageRadiomic = ""
 
-        base_path = os.path.abspath(os.path.join("..", ".."))
+        base_path = os.path.abspath(os.path.join("..", "..", ".."))
         self.output_path = os.path.join(base_path, "Results")
         os.makedirs(self.output_path, exist_ok=True)
 
