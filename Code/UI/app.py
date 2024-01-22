@@ -18,7 +18,7 @@ from pathlib import Path
 from Code.show_data import showData
 from Code.data import CustomDataset
 from Code.mask import Segmentation
-from Code.normalize import MinMaxNormalization, MeanStdNormalization, PercentileNormalization
+from Code.normalize import NoNormalization, MinMaxNormalization, MeanStdNormalization, PercentileNormalization
 from Code.pyRadiomics import Radiomics
 from Code.ROI import ROI
 from PIL import ImageOps, Image
@@ -77,11 +77,12 @@ class Ui_MainWindow(object):
         self.widget.setStyleSheet("background-color: rgb(186, 188, 162);")
         self.widget.setObjectName("widget")
         self.widget_5 = QtWidgets.QWidget(self.widget)
-        self.widget_5.setGeometry(QtCore.QRect(10, 30, 301, 151))
+        self.widget_5.setGeometry(QtCore.QRect(10, 10, 301, 151))
         self.widget_5.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.widget_5.setObjectName("widget_5")
         self.label_5 = QtWidgets.QLabel(self.widget_5)
         self.label_5.setGeometry(QtCore.QRect(80, 0, 121, 31))
+        self.label_5.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
         self.bothButton = QtWidgets.QRadioButton(self.widget_5)
@@ -98,120 +99,142 @@ class Ui_MainWindow(object):
         self.area1Button.setGeometry(QtCore.QRect(10, 80, 161, 20))
         self.area1Button.setObjectName("area1Button")
         self.widget_6 = QtWidgets.QWidget(self.widget)
-        self.widget_6.setGeometry(QtCore.QRect(10, 200, 301, 171))
+        self.widget_6.setGeometry(QtCore.QRect(10, 180, 301, 191))
         self.widget_6.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.widget_6.setObjectName("widget_6")
+        self.label_8 = QtWidgets.QLabel(self.widget_6)
+        self.label_8.setGeometry(QtCore.QRect(0, 30, 171, 31))
+        self.label_8.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_8.setObjectName("label_8")
         self.label = QtWidgets.QLabel(self.widget_6)
-        self.label.setGeometry(QtCore.QRect(80, 0, 121, 31))
+        self.label.setGeometry(QtCore.QRect(80, 10, 121, 21))
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.generateSegButton = QtWidgets.QPushButton(self.widget)
-        self.generateSegButton.setGeometry(QtCore.QRect(370, 50, 150, 50))
+        self.generateSegButton.setGeometry(QtCore.QRect(370, 30, 150, 50))
         self.generateSegButton.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.generateSegButton.setObjectName("generateSegButton")
-        self.generateNormButton = QtWidgets.QPushButton(self.widget)
-        self.generateNormButton.setGeometry(QtCore.QRect(370, 320, 150, 50))
-        self.generateNormButton.setStyleSheet("background-color: rgb(210, 204, 204);")
-        self.generateNormButton.setObjectName("generateNormButton")
         self.roiButton = QtWidgets.QPushButton(self.widget)
-        self.roiButton.setGeometry(QtCore.QRect(370, 110, 150, 50))
+        self.roiButton.setGeometry(QtCore.QRect(370, 140, 150, 50))
         self.roiButton.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.roiButton.setObjectName("roiButton")
         self.statusMaskLabel = QtWidgets.QLabel(self.widget)
-        self.statusMaskLabel.setGeometry(QtCore.QRect(530, 60, 231, 31))
+        self.statusMaskLabel.setGeometry(QtCore.QRect(330, 200, 231, 31))
         self.statusMaskLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.statusMaskLabel.setStyleSheet("")
-        self.statusMaskLabel.setFrameShape(QtWidgets.QFrame.Box)
+        self.statusMaskLabel.setFrameShape(QtWidgets.QFrame.Panel)
+        self.statusMaskLabel.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.statusMaskLabel.setText("")
         self.statusMaskLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.statusMaskLabel.setObjectName("statusMaskLabel")
         self.statusROILabel = QtWidgets.QLabel(self.widget)
-        self.statusROILabel.setGeometry(QtCore.QRect(530, 120, 231, 31))
+        self.statusROILabel.setGeometry(QtCore.QRect(330, 90, 231, 31))
         self.statusROILabel.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.statusROILabel.setStyleSheet("")
-        self.statusROILabel.setFrameShape(QtWidgets.QFrame.Box)
+        self.statusROILabel.setFrameShape(QtWidgets.QFrame.Panel)
+        self.statusROILabel.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.statusROILabel.setText("")
         self.statusROILabel.setAlignment(QtCore.Qt.AlignCenter)
         self.statusROILabel.setObjectName("statusROILabel")
-        self.statusNormLabel = QtWidgets.QLabel(self.widget)
-        self.statusNormLabel.setGeometry(QtCore.QRect(530, 330, 131, 31))
-        self.statusNormLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.statusNormLabel.setStyleSheet("")
-        self.statusNormLabel.setFrameShape(QtWidgets.QFrame.Box)
-        self.statusNormLabel.setText("")
-        self.statusNormLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.statusNormLabel.setObjectName("statusNormLabel")
-        self.showButton = QtWidgets.QPushButton(self.widget)
-        self.showButton.setGeometry(QtCore.QRect(750, 300, 150, 50))
-        self.showButton.setStyleSheet("background-color: rgb(210, 204, 204);")
-        self.showButton.setObjectName("showButton")
+        self.csvStatusLabel = QtWidgets.QLabel(self.widget)
+        self.csvStatusLabel.setGeometry(QtCore.QRect(370, 340, 151, 31))
+        self.csvStatusLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.csvStatusLabel.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.csvStatusLabel.setFrameShape(QtWidgets.QFrame.Panel)
+        self.csvStatusLabel.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.csvStatusLabel.setText("")
+        self.csvStatusLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.csvStatusLabel.setObjectName("csvStatusLabel")
+        self.csvButton = QtWidgets.QPushButton(self.widget)
+        self.csvButton.setGeometry(QtCore.QRect(370, 280, 150, 50))
+        self.csvButton.setStyleSheet("background-color: rgb(210, 204, 204);\n"
+"")
+        self.csvButton.setObjectName("csvButton")
+        self.emptyMasksList = QtWidgets.QListWidget(self.widget)
+        self.emptyMasksList.setGeometry(QtCore.QRect(580, 40, 331, 171))
+        self.emptyMasksList.setStyleSheet("background-color: rgb(239, 239, 239);")
+        self.emptyMasksList.setFrameShape(QtWidgets.QFrame.Panel)
+        self.emptyMasksList.setObjectName("emptyMasksList")
+        self.label_7 = QtWidgets.QLabel(self.widget)
+        self.label_7.setGeometry(QtCore.QRect(680, 10, 121, 31))
+        self.label_7.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_7.setObjectName("label_7")
         self.widget_6.raise_()
         self.widget_5.raise_()
         self.generateSegButton.raise_()
-        self.generateNormButton.raise_()
         self.roiButton.raise_()
         self.statusMaskLabel.raise_()
         self.statusROILabel.raise_()
-        self.statusNormLabel.raise_()
-        self.showButton.raise_()
+        self.csvStatusLabel.raise_()
+        self.csvButton.raise_()
+        self.emptyMasksList.raise_()
+        self.label_7.raise_()
         self.widget.raise_()
         self.noNormaButton.raise_()
         self.minMaxButton.raise_()
         self.meanStdButton.raise_()
         self.perButton.raise_()
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
-        self.frame_2.setGeometry(QtCore.QRect(10, 420, 561, 201))
+        self.frame_2.setGeometry(QtCore.QRect(10, 420, 541, 201))
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
-        self.loadDataButton = QtWidgets.QPushButton(self.frame_2)
-        self.loadDataButton.setGeometry(QtCore.QRect(40, 110, 150, 50))
-        self.loadDataButton.setStyleSheet("background-color: rgb(210, 204, 204);")
-        self.loadDataButton.setObjectName("loadDataButton")
-        self.button3D = QtWidgets.QCheckBox(self.frame_2)
-        self.button3D.setGeometry(QtCore.QRect(50, 170, 131, 21))
-        self.button3D.setObjectName("button3D")
-        self.LoadFolderButton = QtWidgets.QPushButton(self.frame_2)
-        self.LoadFolderButton.setGeometry(QtCore.QRect(40, 50, 150, 50))
-        self.LoadFolderButton.setStyleSheet("background-color: rgb(210, 204, 204);")
-        self.LoadFolderButton.setObjectName("LoadFolderButton")
         self.widget_4 = QtWidgets.QWidget(self.frame_2)
-        self.widget_4.setGeometry(QtCore.QRect(0, 0, 561, 201))
+        self.widget_4.setGeometry(QtCore.QRect(0, 0, 541, 201))
         self.widget_4.setStyleSheet("background-color: rgb(186, 188, 162);")
         self.widget_4.setObjectName("widget_4")
         self.label_3 = QtWidgets.QLabel(self.widget_4)
-        self.label_3.setGeometry(QtCore.QRect(210, 10, 121, 31))
+        self.label_3.setGeometry(QtCore.QRect(200, 10, 121, 31))
+        self.label_3.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.label_3.setFrameShadow(QtWidgets.QFrame.Plain)
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
-        self.loadMaskButton = QtWidgets.QPushButton(self.widget_4)
-        self.loadMaskButton.setGeometry(QtCore.QRect(360, 50, 150, 50))
-        self.loadMaskButton.setStyleSheet("background-color: rgb(210, 204, 204);")
-        self.loadMaskButton.setObjectName("loadMaskButton")
         self.loadMaskFolderButton = QtWidgets.QPushButton(self.widget_4)
         self.loadMaskFolderButton.setGeometry(QtCore.QRect(360, 110, 150, 50))
         self.loadMaskFolderButton.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.loadMaskFolderButton.setObjectName("loadMaskFolderButton")
-        self.widget_4.raise_()
-        self.loadDataButton.raise_()
-        self.button3D.raise_()
-        self.LoadFolderButton.raise_()
+        self.loadDataButton = QtWidgets.QPushButton(self.widget_4)
+        self.loadDataButton.setGeometry(QtCore.QRect(20, 50, 150, 50))
+        self.loadDataButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.loadDataButton.setObjectName("loadDataButton")
+        self.LoadFolderButton = QtWidgets.QPushButton(self.widget_4)
+        self.LoadFolderButton.setGeometry(QtCore.QRect(20, 110, 150, 50))
+        self.LoadFolderButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.LoadFolderButton.setObjectName("LoadFolderButton")
+        self.button3D = QtWidgets.QCheckBox(self.widget_4)
+        self.button3D.setGeometry(QtCore.QRect(20, 170, 131, 21))
+        self.button3D.setObjectName("button3D")
+        self.csvStatusLabel_2 = QtWidgets.QLabel(self.widget_4)
+        self.csvStatusLabel_2.setGeometry(QtCore.QRect(190, 60, 151, 31))
+        self.csvStatusLabel_2.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.csvStatusLabel_2.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.csvStatusLabel_2.setFrameShape(QtWidgets.QFrame.Panel)
+        self.csvStatusLabel_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.csvStatusLabel_2.setText("")
+        self.csvStatusLabel_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.csvStatusLabel_2.setObjectName("csvStatusLabel_2")
+        self.csvStatusLabel_3 = QtWidgets.QLabel(self.widget_4)
+        self.csvStatusLabel_3.setGeometry(QtCore.QRect(190, 120, 151, 31))
+        self.csvStatusLabel_3.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.csvStatusLabel_3.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.csvStatusLabel_3.setFrameShape(QtWidgets.QFrame.Panel)
+        self.csvStatusLabel_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.csvStatusLabel_3.setText("")
+        self.csvStatusLabel_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.csvStatusLabel_3.setObjectName("csvStatusLabel_3")
+        self.loadMaskButton = QtWidgets.QPushButton(self.widget_4)
+        self.loadMaskButton.setGeometry(QtCore.QRect(360, 50, 150, 50))
+        self.loadMaskButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.loadMaskButton.setObjectName("loadMaskButton")
         self.widget_2 = QtWidgets.QWidget(self.centralwidget)
         self.widget_2.setGeometry(QtCore.QRect(0, 0, 961, 641))
         self.widget_2.setStyleSheet("background-color: rgb(81, 93, 78);")
         self.widget_2.setObjectName("widget_2")
-        self.csvButton = QtWidgets.QPushButton(self.widget_2)
-        self.csvButton.setGeometry(QtCore.QRect(770, 550, 150, 50))
-        self.csvButton.setStyleSheet("background-color: rgb(210, 204, 204);\n"
-"")
-        self.csvButton.setObjectName("csvButton")
-        self.csvStatusLabel = QtWidgets.QLabel(self.widget_2)
-        self.csvStatusLabel.setGeometry(QtCore.QRect(610, 560, 151, 31))
-        self.csvStatusLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.csvStatusLabel.setStyleSheet("background-color: rgb(186, 188, 162);")
-        self.csvStatusLabel.setFrameShape(QtWidgets.QFrame.Box)
-        self.csvStatusLabel.setText("")
-        self.csvStatusLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.csvStatusLabel.setObjectName("csvStatusLabel")
+        self.loadDataList = QtWidgets.QListWidget(self.widget_2)
+        self.loadDataList.setGeometry(QtCore.QRect(560, 420, 371, 201))
+        self.loadDataList.setStyleSheet("background-color: rgb(239, 239, 239);")
+        self.loadDataList.setFrameShape(QtWidgets.QFrame.Panel)
+        self.loadDataList.setObjectName("loadDataList")
         self.widget_2.raise_()
         self.frame.raise_()
         self.frame_2.raise_()
@@ -221,30 +244,38 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.loadDataButton.clicked.connect(lambda: self.getFile())
         self.LoadFolderButton.clicked.connect(lambda: self.getFolder())
-        #self.showButton.clicked.connect(lambda: self.showImages())
+        # self.showButton.clicked.connect(lambda: self.showImages())
         self.loadMaskButton.clicked.connect(lambda: self.getMask())
         self.loadMaskFolderButton.clicked.connect(lambda: self.getMaskFolder())
         self.generateSegButton.clicked.connect(lambda: self.chooseSegmentation())
         self.roiButton.clicked.connect(lambda: self.getROI())
-        self.generateNormButton.clicked.connect(lambda: self.chooseNormalization())
-        self.csvButton.clicked.connect(lambda: self.radiomics())
+        # self.generateNormButton.clicked.connect(lambda: self.chooseNormalization())
+        # self.csvButton.clicked.connect(lambda: self.radiomics())
+        self.csvButton.clicked.connect(lambda: self.generateCsvAndNormalize())
 
     def getFile(self):
         # Open window to choose file
         self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}", "Formats: (*.png )")
 
+        if not self.filePath:  # Jeśli lista jest pusta, pokaż ostrzeżenie
+            QMessageBox.warning(self.window, "No Image Selected", "Please select images.")
+            return
+
         for filePath in self.filePath:
             image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-            name = os.path.basename(filePath)
+            #name = os.path.basename(filePath)
             # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             self.input_images.append((image, filePath))
-            self.input_images_names.append(name)
+            #self.input_images_names.append(name)
 
-            print(f"Image: {len(self.input_images)}")
+        self.loadDataList.addItems([name for _, name in self.input_images])
+        self.csvStatusLabel_2.setText(f"Images: {len(self.input_images)}")
+        print(f"Image: {len(self.input_images)}")
 
     def getFolder(self):
         # Open window to choose file
         self.folderPath = QFileDialog.getExistingDirectory(self.window, 'Choose a patient Directory', "${HOME}")
+
 
         if self.folderPath:
             for root, dirs, files in os.walk(self.folderPath):
@@ -254,17 +285,27 @@ class Ui_MainWindow(object):
                         image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
                         self.input_images.append((image, filePath))
                         print(f"Image: {len(self.input_images)}")
+
+            self.csvStatusLabel_2.setText(f"Images: {len(self.input_images)}")
+            self.loadDataList.addItems([name for _, name in self.input_images])
         else:
-            print("Empty directory")
+            QMessageBox.warning(self.window, "No Images Selected", "Please select patient directory.")
+
 
     def getMask(self):
         # Open window to choose file
         self.filePath, _ = QFileDialog.getOpenFileNames(self.window, 'Choose an image', "${HOME}", "Formats: (*.png )")
 
+        if not self.filePath:  # Jeśli lista jest pusta, pokaż ostrzeżenie
+            QMessageBox.warning(self.window, "No Mask Selected", "Please select Masks.")
+            return
+
         for filePath in self.filePath:
             mask = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
             self.input_masks.append(mask)
             self.input_mask_path.append(filePath)
+
+            self.csvStatusLabel_3.setText(f"Masks: {len(self.input_masks)}")
             print(f"Masks: {len(self.input_masks)}")
 
     def getMaskFolder(self):
@@ -279,12 +320,14 @@ class Ui_MainWindow(object):
                     if fileName.lower().endswith(('.png')):
                         filePath = os.path.join(root, fileName)
                         maskF = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-                        #nameFolder = os.path.basename(self.folderPath)
+                        # nameFolder = os.path.basename(self.folderPath)
                         self.input_masks.append(maskF)
                         self.input_mask_path.append(filePath)
                         print(f"Masks Folder: {len(self.input_masks)}")
+
+                        self.csvStatusLabel_3.setText(f"Masks: {len(self.input_masks)}")
         else:
-            print("Empty directory")
+            QMessageBox.warning(self.window, "No Masks Selected", "Please select masks directory.")
 
     def showImages(self):
         if self.images:
@@ -297,20 +340,22 @@ class Ui_MainWindow(object):
     def chooseSegmentation(self):
         segmentation = Segmentation()
         message = ""
+        new_mask_sitk = None
+
         if self.area1Button.isChecked():
             new_mask_sitk = segmentation.segmentationMask(self.input_masks, [1])
-            self.newMasks.extend(new_mask_sitk)
-            message = "Sucessful! New mask/masks created"
-            print(f"New Masks: {len(self.newMasks)}")
-            #print(f"Empty Masks: {len(empty_masks)}")
         elif self.area2Button.isChecked():
             new_mask_sitk = segmentation.segmentationMask(self.input_masks, [2])
-            self.newMasks.extend(new_mask_sitk)
-            message = "Sucessful! New mask/masks created"
         elif self.bothButton.isChecked():
             new_mask_sitk = segmentation.segmentationMask(self.input_masks, [1, 2])
+
+        if new_mask_sitk is not None:
             self.newMasks.extend(new_mask_sitk)
-            message = "Sucessful! New mask/masks created"
+            #print(f"New Masks: {len(self.newMasks)}")
+            message = "Successful! New mask/masks created"
+        else:
+            QMessageBox.warning(self.window, "No Region Selected", "No region selected for mask. Please select a region.")
+
         self.statusMaskLabel.setText(message)
 
     def getROI(self):
@@ -318,58 +363,67 @@ class Ui_MainWindow(object):
         empty_masks = []
         empty_masks_images = []
         messageROI = ""
+
         for (image, image_path), mask in zip(self.input_images, self.newMasks):
             if np.all(mask == 0):
                 empty_masks.append(mask)
                 empty_masks_images.append(image_path)
-                #print(f" {mask}")
-                print(f"{image_path}")
             else:
                 roiImg, roiMask = roi.roiImage(image, mask)
                 self.roiImages.append((roiImg, image_path, roiMask))
-                #self.roiMasks.append(roiMask)
-                messageROI = "Sucessful! ROI created"
-                self.statusROILabel.setText(messageROI)
-                #print(f"Image shape: {roiImg.shape}")
-                #print(f"Mask shape: {roiMask.shape}")
 
-                #print(f"self.roiImage: {self.roiImages}")
-                #print(f"self.roiMask: {self.roiMasks}")
+        if not self.roiImages:
+            messageROI = "No region of interest selected."
+            QMessageBox.warning(self.window, "No ROI Selected", messageROI)
+        else:
+            messageROI = "Successful! ROI created"
+            self.statusROILabel.setText(messageROI)
+            self.emptyMasksList.addItems(empty_masks_images)
 
-                #print(f"ROI Mask: {len(self.roiMasks)}")
-                #print(f"ROI Images: {len(self.roiImages)}")
+
 
     def chooseNormalization(self):
-        # Strategy instances
+        no_normalization = NoNormalization()
         min_max_normalization = MinMaxNormalization()
         mean_std_normalization = MeanStdNormalization()
         percentile_normalization = PercentileNormalization()
+        normalization_selected = False
 
         for (image, image_path, mask) in self.roiImages:
-            if self.minMaxButton.isChecked():
+            if self.noNormaButton.isChecked():
+                new_image = no_normalization.normalize(image, mask)
+                normalization_selected = True
+            elif self.minMaxButton.isChecked():
                 new_image = min_max_normalization.normalize(image, mask)
+                normalization_selected = True
             elif self.meanStdButton.isChecked():
                 new_image = mean_std_normalization.normalize(image, mask)
             elif self.perButton.isChecked():
                 new_image = percentile_normalization.normalize(image, mask)
+                normalization_selected = True
 
-            print(f"normImage: {new_image.shape}")
+            #print(f"normImage: {new_image.shape}")
             self.normImages.append((new_image, image_path, mask))
+
+        if not normalization_selected:
+            message = "No normalization method selected."
+            QMessageBox.warning(self.window, "No Normalization Selected", message)
 
     def radiomics(self):
         radiomics = Radiomics()
         messageRadiomic = ""
+
         base_path = os.path.abspath(os.path.join("..", ".."))
         self.output_path = os.path.join(base_path, "Results")
         os.makedirs(self.output_path, exist_ok=True)
-        if self.noNormaButton.isChecked():
-            print("self.noNormaButton.isChecked():")
-            radiomics.extractRadiomics(self.roiImages, self.output_path)
-            messageRadiomic = "CSV files created "
-        else:
-            radiomics.extractRadiomics(self.normImages, self.output_path)
-            messageRadiomic = "CSV files created "
+
+        radiomics.extractRadiomics(self.normImages, self.output_path)
+        messageRadiomic = "CSV files created "
         self.csvStatusLabel.setText(messageRadiomic)
+
+    def generateCsvAndNormalize(self):
+        self.chooseNormalization()
+        self.radiomics()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -380,21 +434,21 @@ class Ui_MainWindow(object):
         self.perButton.setText(_translate("MainWindow", "Percentile normalization"))
         self.label_5.setText(_translate("MainWindow", "Segmentation"))
         self.bothButton.setText(_translate("MainWindow", "Both"))
-        self.label_6.setText(_translate("MainWindow", "Select the area to analyze:"))
+        self.label_6.setText(_translate("MainWindow", "Select the region to analyze:"))
         self.area2Button.setText(_translate("MainWindow", "External region"))
         self.area1Button.setText(_translate("MainWindow", "Internal region"))
+        self.label_8.setText(_translate("MainWindow", "Choose normalization:"))
         self.label.setText(_translate("MainWindow", "Normalization"))
         self.generateSegButton.setText(_translate("MainWindow", "Generate Segmentation"))
-        self.generateNormButton.setText(_translate("MainWindow", "Normalization"))
         self.roiButton.setText(_translate("MainWindow", "Get ROI"))
-        self.showButton.setText(_translate("MainWindow", "Show Data"))
-        self.loadDataButton.setText(_translate("MainWindow", "Load Data"))
-        self.button3D.setText(_translate("MainWindow", "3D Image"))
-        self.LoadFolderButton.setText(_translate("MainWindow", "Load Folder"))
-        self.label_3.setText(_translate("MainWindow", "Data"))
-        self.loadMaskButton.setText(_translate("MainWindow", "Load Mask"))
-        self.loadMaskFolderButton.setText(_translate("MainWindow", "Load Mask Folder"))
         self.csvButton.setText(_translate("MainWindow", "Generate CSV"))
+        self.label_7.setText(_translate("MainWindow", "Empty Masks"))
+        self.label_3.setText(_translate("MainWindow", "Data"))
+        self.loadMaskFolderButton.setText(_translate("MainWindow", "Load Mask Folder"))
+        self.loadDataButton.setText(_translate("MainWindow", "Load Data"))
+        self.LoadFolderButton.setText(_translate("MainWindow", "Load Folder"))
+        self.button3D.setText(_translate("MainWindow", "3D Image"))
+        self.loadMaskButton.setText(_translate("MainWindow", "Load Mask"))
 
 
 if __name__ == "__main__":

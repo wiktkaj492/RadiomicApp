@@ -100,7 +100,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>10</y>
         <width>301</width>
         <height>151</height>
        </rect>
@@ -116,6 +116,9 @@
          <width>121</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="text">
         <string>Segmentation</string>
@@ -147,7 +150,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Select the area to analyze:</string>
+        <string>Select the region to analyze:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -184,21 +187,37 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>200</y>
+        <y>180</y>
         <width>301</width>
-        <height>171</height>
+        <height>191</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(210, 204, 204);</string>
       </property>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>30</y>
+         <width>171</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Choose normalization:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
          <x>80</x>
-         <y>0</y>
+         <y>10</y>
          <width>121</width>
-         <height>31</height>
+         <height>21</height>
         </rect>
        </property>
        <property name="text">
@@ -213,7 +232,7 @@
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>50</y>
+        <y>30</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -225,27 +244,11 @@
        <string>Generate Segmentation</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="generateNormButton">
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>320</y>
-        <width>150</width>
-        <height>50</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(210, 204, 204);</string>
-      </property>
-      <property name="text">
-       <string>Normalization</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="roiButton">
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>110</y>
+        <y>140</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -260,8 +263,8 @@
      <widget class="QLabel" name="statusMaskLabel">
       <property name="geometry">
        <rect>
-        <x>530</x>
-        <y>60</y>
+        <x>330</x>
+        <y>200</y>
         <width>231</width>
         <height>31</height>
        </rect>
@@ -273,7 +276,10 @@
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Box</enum>
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
       </property>
       <property name="text">
        <string/>
@@ -285,8 +291,8 @@
      <widget class="QLabel" name="statusROILabel">
       <property name="geometry">
        <rect>
-        <x>530</x>
-        <y>120</y>
+        <x>330</x>
+        <y>90</y>
         <width>231</width>
         <height>31</height>
        </rect>
@@ -298,7 +304,10 @@
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Box</enum>
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
       </property>
       <property name="text">
        <string/>
@@ -307,12 +316,12 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="statusNormLabel">
+     <widget class="QLabel" name="csvStatusLabel">
       <property name="geometry">
        <rect>
-        <x>530</x>
-        <y>330</y>
-        <width>131</width>
+        <x>370</x>
+        <y>340</y>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -320,10 +329,13 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(186, 188, 162);</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Box</enum>
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
       </property>
       <property name="text">
        <string/>
@@ -332,31 +344,65 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="showButton">
+     <widget class="QPushButton" name="csvButton">
       <property name="geometry">
        <rect>
-        <x>750</x>
-        <y>300</y>
+        <x>370</x>
+        <y>280</y>
         <width>150</width>
         <height>50</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(210, 204, 204);</string>
+       <string notr="true">background-color: rgb(210, 204, 204);
+</string>
       </property>
       <property name="text">
-       <string>Show Data</string>
+       <string>Generate CSV</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="emptyMasksList">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>40</y>
+        <width>331</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(239, 239, 239);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>10</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Empty Masks</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <zorder>widget_6</zorder>
      <zorder>widget_5</zorder>
      <zorder>generateSegButton</zorder>
-     <zorder>generateNormButton</zorder>
      <zorder>roiButton</zorder>
      <zorder>statusMaskLabel</zorder>
      <zorder>statusROILabel</zorder>
-     <zorder>statusNormLabel</zorder>
-     <zorder>showButton</zorder>
+     <zorder>csvStatusLabel</zorder>
+     <zorder>csvButton</zorder>
+     <zorder>emptyMasksList</zorder>
+     <zorder>label_7</zorder>
     </widget>
     <zorder>widget</zorder>
     <zorder>noNormaButton</zorder>
@@ -369,7 +415,7 @@
      <rect>
       <x>10</x>
       <y>420</y>
-      <width>561</width>
+      <width>541</width>
       <height>201</height>
      </rect>
     </property>
@@ -379,57 +425,12 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="loadDataButton">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>110</y>
-       <width>150</width>
-       <height>50</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(210, 204, 204);</string>
-     </property>
-     <property name="text">
-      <string>Load Data</string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="button3D">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>170</y>
-       <width>131</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>3D Image</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="LoadFolderButton">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>50</y>
-       <width>150</width>
-       <height>50</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(210, 204, 204);</string>
-     </property>
-     <property name="text">
-      <string>Load Folder</string>
-     </property>
-    </widget>
     <widget class="QWidget" name="widget_4" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>561</width>
+       <width>541</width>
        <height>201</height>
       </rect>
      </property>
@@ -439,14 +440,137 @@
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>200</x>
         <y>10</y>
         <width>121</width>
         <height>31</height>
        </rect>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
       <property name="text">
        <string>Data</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="loadMaskFolderButton">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>110</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Load Mask Folder</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="loadDataButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Load Data</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="LoadFolderButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>110</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Load Folder</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="button3D">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>170</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>3D Image</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="csvStatusLabel_2">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>60</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(186, 188, 162);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="csvStatusLabel_3">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>120</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(186, 188, 162);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="text">
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -468,27 +592,7 @@
        <string>Load Mask</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="loadMaskFolderButton">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>110</y>
-        <width>150</width>
-        <height>50</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(210, 204, 204);</string>
-      </property>
-      <property name="text">
-       <string>Load Mask Folder</string>
-      </property>
-     </widget>
     </widget>
-    <zorder>widget_4</zorder>
-    <zorder>loadDataButton</zorder>
-    <zorder>button3D</zorder>
-    <zorder>LoadFolderButton</zorder>
    </widget>
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
@@ -502,46 +606,20 @@
     <property name="styleSheet">
      <string notr="true">background-color: rgb(81, 93, 78);</string>
     </property>
-    <widget class="QPushButton" name="csvButton">
+    <widget class="QListWidget" name="loadDataList">
      <property name="geometry">
       <rect>
-       <x>770</x>
-       <y>550</y>
-       <width>150</width>
-       <height>50</height>
+       <x>560</x>
+       <y>420</y>
+       <width>371</width>
+       <height>201</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(210, 204, 204);
-</string>
-     </property>
-     <property name="text">
-      <string>Generate CSV</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="csvStatusLabel">
-     <property name="geometry">
-      <rect>
-       <x>610</x>
-       <y>560</y>
-       <width>151</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(186, 188, 162);</string>
+      <string notr="true">background-color: rgb(239, 239, 239);</string>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <enum>QFrame::Panel</enum>
      </property>
     </widget>
    </widget>
