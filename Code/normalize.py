@@ -48,7 +48,7 @@ class MinMaxNormalization(NormalizationStrategy):
         # Check if there are at least two unique levels to avoid division by zero
         if min_val == max_val:
             roiImage[mask_bool] = 0
-            self.save_debug_images([roiImage], ["norm_minmax"])
+            self.save_debug_images([roiImage], ["noNorm"])
             return roiImage
 
         # Apply the normalization formula to the region of interest
@@ -91,7 +91,7 @@ class MeanStdNormalization(NormalizationStrategy):
         # Check if there are at least two unique levels to avoid division by zero
         if min_val == max_val:
             roiImage[mask_bool] = 0
-            self.save_debug_images([roiImage], ["norm_minmax"])
+            self.save_debug_images([roiImage], ["NoNorm"])
             return roiImage
 
         # Apply the normalization formula to the region of interest
@@ -131,7 +131,7 @@ class PercentileNormalization(NormalizationStrategy):
         # Ensure that the calculated percentiles are not equal
         if min_val == max_val:
             roiImage[mask_bool] = 0
-            self.save_debug_images([roiImage], ["norm_minmax"])
+            self.save_debug_images([roiImage], ["noNorm"])
             return roiImage
 
         # Normalize the ROI values

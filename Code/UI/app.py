@@ -392,6 +392,7 @@ class Ui_MainWindow(object):
                 normalization_selected = True
             elif self.meanStdButton.isChecked():
                 new_image = mean_std_normalization.normalize(image, mask)
+                normalization_selected = True
             elif self.perButton.isChecked():
                 new_image = percentile_normalization.normalize(image, mask)
                 normalization_selected = True
