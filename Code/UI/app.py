@@ -202,24 +202,24 @@ class Ui_MainWindow(object):
         self.button3D = QtWidgets.QCheckBox(self.widget_4)
         self.button3D.setGeometry(QtCore.QRect(20, 170, 131, 21))
         self.button3D.setObjectName("button3D")
-        self.csvStatusLabel_2 = QtWidgets.QLabel(self.widget_4)
-        self.csvStatusLabel_2.setGeometry(QtCore.QRect(190, 60, 151, 31))
-        self.csvStatusLabel_2.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.csvStatusLabel_2.setStyleSheet("background-color: rgb(186, 188, 162);")
-        self.csvStatusLabel_2.setFrameShape(QtWidgets.QFrame.Panel)
-        self.csvStatusLabel_2.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.csvStatusLabel_2.setText("")
-        self.csvStatusLabel_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.csvStatusLabel_2.setObjectName("csvStatusLabel_2")
-        self.csvStatusLabel_3 = QtWidgets.QLabel(self.widget_4)
-        self.csvStatusLabel_3.setGeometry(QtCore.QRect(190, 120, 151, 31))
-        self.csvStatusLabel_3.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.csvStatusLabel_3.setStyleSheet("background-color: rgb(186, 188, 162);")
-        self.csvStatusLabel_3.setFrameShape(QtWidgets.QFrame.Panel)
-        self.csvStatusLabel_3.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.csvStatusLabel_3.setText("")
-        self.csvStatusLabel_3.setAlignment(QtCore.Qt.AlignCenter)
-        self.csvStatusLabel_3.setObjectName("csvStatusLabel_3")
+        self.imageNumber = QtWidgets.QLabel(self.widget_4)
+        self.imageNumber.setGeometry(QtCore.QRect(190, 60, 151, 31))
+        self.imageNumber.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.imageNumber.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.imageNumber.setFrameShape(QtWidgets.QFrame.Panel)
+        self.imageNumber.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.imageNumber.setText("")
+        self.imageNumber.setAlignment(QtCore.Qt.AlignCenter)
+        self.imageNumber.setObjectName("imageNumber")
+        self.maskNumber = QtWidgets.QLabel(self.widget_4)
+        self.maskNumber.setGeometry(QtCore.QRect(190, 120, 151, 31))
+        self.maskNumber.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.maskNumber.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.maskNumber.setFrameShape(QtWidgets.QFrame.Panel)
+        self.maskNumber.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.maskNumber.setText("")
+        self.maskNumber.setAlignment(QtCore.Qt.AlignCenter)
+        self.maskNumber.setObjectName("maskNumber")
         self.loadMaskButton = QtWidgets.QPushButton(self.widget_4)
         self.loadMaskButton.setGeometry(QtCore.QRect(360, 50, 150, 50))
         self.loadMaskButton.setStyleSheet("background-color: rgb(210, 204, 204);")
@@ -261,13 +261,13 @@ class Ui_MainWindow(object):
 
         for filePath in self.filePath:
             image = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
-            #name = os.path.basename(filePath)
-            #img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            # name = os.path.basename(filePath)
+            # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             self.input_images.append((image, filePath))
 
         self.loadDataList.addItems([name for _, name in self.input_images])
-        self.csvStatusLabel_2.setText(f"Images: {len(self.input_images)}")
-        #print(f"Image: {len(self.input_images)}")
+        self.imageNumber.setText(f"Images: {len(self.input_images)}")
+        # print(f"Image: {len(self.input_images)}")
 
     def getFolder(self):
         # Open window to choose file
@@ -282,7 +282,7 @@ class Ui_MainWindow(object):
                         self.input_images.append((image, filePath))
                         print(f"Image: {len(self.input_images)}")
 
-            self.csvStatusLabel_2.setText(f"Images: {len(self.input_images)}")
+            self.imageNumber.setText(f"Images: {len(self.input_images)}")
             self.loadDataList.addItems([name for _, name in self.input_images])
         else:
             QMessageBox.warning(self.window, "No Images Selected", "Please select patient directory.")
@@ -300,7 +300,7 @@ class Ui_MainWindow(object):
             self.input_masks.append(mask)
             self.input_mask_path.append(filePath)
 
-            self.csvStatusLabel_3.setText(f"Masks: {len(self.input_masks)}")
+            self.maskNumber.setText(f"Masks: {len(self.input_masks)}")
             print(f"Masks: {len(self.input_masks)}")
 
     def getMaskFolder(self):
@@ -320,7 +320,7 @@ class Ui_MainWindow(object):
                         self.input_mask_path.append(filePath)
                         print(f"Masks Folder: {len(self.input_masks)}")
 
-                        self.csvStatusLabel_3.setText(f"Masks: {len(self.input_masks)}")
+                        self.maskNumber.setText(f"Masks: {len(self.input_masks)}")
         else:
             QMessageBox.warning(self.window, "No Masks Selected", "Please select masks directory.")
 

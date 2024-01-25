@@ -520,7 +520,7 @@
        <string>3D Image</string>
       </property>
      </widget>
-     <widget class="QLabel" name="csvStatusLabel_2">
+     <widget class="QLabel" name="imageNumber">
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -548,7 +548,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="csvStatusLabel_3">
+     <widget class="QLabel" name="maskNumber">
       <property name="geometry">
        <rect>
         <x>190</x>
