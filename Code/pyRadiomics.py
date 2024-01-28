@@ -8,52 +8,37 @@ import skimage
 import trimesh
 import pywt
 import os
+import csv
 
 
 class Radiomics(object):
 
-    def extractRadiomics(self, images, results_folder_path):
+    def extractRadiomics(self, images, param_file, results_folder_path):
 
         # Initialize the feature extractor
-        extractor = featureextractor.RadiomicsFeatureExtractor()
-        extractor.enableAllFeatures()
+        extractor = featureextractor.RadiomicsFeatureExtractor(param_file)
+        #extractor.enableAllFeatures()
 
-        params = {
-            'Square': {},  # Square image filter
-            'Exponential': {},  # Exponential image filter
-            'Logarithm': {},  # Logarithm image filter
-        }
-
-        for image_type, kwargs in params.items():
-            extractor.enableImageTypeByName(image_type, customArgs=kwargs)
-
-        filenames = {
-            'original_': os.path.join(results_folder_path, 'original.csv'),
-            'square_': os.path.join(results_folder_path, 'square.csv'),
-            'logarithm_': os.path.join(results_folder_path, 'logarithm.csv'),
-            'exponential_': os.path.join(results_folder_path, 'expo.csv')
-        }
-
-        dfs = {key: pd.DataFrame() for key in filenames}
+        filenames = os.path.join(results_folder_path, 'results.csv')
+        with open(filenames, mode='w', newline='') as file:
+            writer = None
 
         # Iterate over each image/mask pair
-        for (image, image_path, mask) in images:
+            for (image, image_path, mask) in images:
 
-            # Convert the numpy arrays to SimpleITK images
-            mask_image_sitk = sitk.GetImageFromArray(mask)
-            prostate_image_sitk = sitk.GetImageFromArray(image)
+                # Convert the numpy arrays to SimpleITK images
+                mask_image_sitk = sitk.GetImageFromArray(mask)
+                prostate_image_sitk = sitk.GetImageFromArray(image)
 
-            # Execute feature extraction
-            results = extractor.execute(prostate_image_sitk, mask_image_sitk)
-            for image_type, filename in filenames.items():
-                features = {k: results[k] for k in results if k.startswith(image_type)}
-                if features:
-                    features_with_image = {'Image': image_path, **features}
-                    df = pd.DataFrame(features_with_image, index=[0])
+                # Execute feature extraction
+                results = extractor.execute(prostate_image_sitk, mask_image_sitk)
+                print(results)
+                # Write headers if it's the first row
+                results['image_path'] = image_path
+                if writer is None:
+                    writer = csv.DictWriter(file, fieldnames=['image_path'] + list(results.keys()))
+                    writer.writeheader()
 
-                    # Append to the DataFrame for the current image type
-                    dfs[image_type] = dfs[image_type]._append(df, ignore_index=True)
-
-        for image_type, df in dfs.items():
-                df.to_csv(filenames[image_type], mode='w', index=False)
+                # Write the results
+                writer.writerow(results)
 

@@ -9,7 +9,7 @@ class Segmentation(object):
     def __init__(self):
         pass
 
-    def binarize_mask(self, mask, values):
+    def segmenMask(self, mask, values):
         # Create a copy of the mask to avoid modifying the original
         binary_mask = np.copy(mask)
 
@@ -41,7 +41,7 @@ class Segmentation(object):
     def segmentationMask(self, masks, values):
         new_mask_sitk = []
         for segmentation_image in masks:
-            mask_array = self.binarize_mask(segmentation_image, values)
+            mask_array = self.segmenMask(segmentation_image, values)
             self.save_debug_images([mask_array], ["mask"])
             new_mask_sitk.append(mask_array)
         return new_mask_sitk

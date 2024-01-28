@@ -188,7 +188,7 @@
        <rect>
         <x>10</x>
         <y>180</y>
-        <width>301</width>
+        <width>401</width>
         <height>191</height>
        </rect>
       </property>
@@ -200,12 +200,12 @@
         <rect>
          <x>0</x>
          <y>30</y>
-         <width>171</width>
+         <width>301</width>
          <height>31</height>
         </rect>
        </property>
        <property name="text">
-        <string>Choose normalization:</string>
+        <string>Choose normalization and number bits to :</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -227,44 +227,44 @@
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-     </widget>
-     <widget class="QPushButton" name="generateSegButton">
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>30</y>
-        <width>150</width>
-        <height>50</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(210, 204, 204);</string>
-      </property>
-      <property name="text">
-       <string>Generate Segmentation</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="roiButton">
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>140</y>
-        <width>150</width>
-        <height>50</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(210, 204, 204);</string>
-      </property>
-      <property name="text">
-       <string>Get ROI</string>
-      </property>
+      <widget class="QSpinBox" name="numberBits">
+       <property name="geometry">
+        <rect>
+         <x>340</x>
+         <y>150</y>
+         <width>42</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>8</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>150</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Number of bits:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
      </widget>
      <widget class="QLabel" name="statusMaskLabel">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>90</y>
+        <x>360</x>
+        <y>60</y>
         <width>231</width>
         <height>31</height>
        </rect>
@@ -291,8 +291,8 @@
      <widget class="QLabel" name="statusROILabel">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>200</y>
+        <x>360</x>
+        <y>120</y>
         <width>231</width>
         <height>31</height>
        </rect>
@@ -319,7 +319,7 @@
      <widget class="QLabel" name="csvStatusLabel">
       <property name="geometry">
        <rect>
-        <x>370</x>
+        <x>730</x>
         <y>340</y>
         <width>151</width>
         <height>31</height>
@@ -347,7 +347,7 @@
      <widget class="QPushButton" name="csvButton">
       <property name="geometry">
        <rect>
-        <x>370</x>
+        <x>730</x>
         <y>280</y>
         <width>150</width>
         <height>50</height>
@@ -364,9 +364,9 @@
      <widget class="QListWidget" name="emptyMasksList">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>630</x>
         <y>40</y>
-        <width>331</width>
+        <width>281</width>
         <height>171</height>
        </rect>
       </property>
@@ -380,7 +380,7 @@
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>680</x>
+        <x>710</x>
         <y>10</y>
         <width>121</width>
         <height>31</height>
@@ -393,16 +393,61 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QLabel" name="loadParamStatus">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>340</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(186, 188, 162);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="loadParamFile">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>280</y>
+        <width>150</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);
+</string>
+      </property>
+      <property name="text">
+       <string>Load Parameter File</string>
+      </property>
+     </widget>
      <zorder>widget_6</zorder>
      <zorder>widget_5</zorder>
-     <zorder>generateSegButton</zorder>
-     <zorder>roiButton</zorder>
      <zorder>statusMaskLabel</zorder>
      <zorder>statusROILabel</zorder>
      <zorder>csvStatusLabel</zorder>
      <zorder>csvButton</zorder>
      <zorder>emptyMasksList</zorder>
      <zorder>label_7</zorder>
+     <zorder>loadParamStatus</zorder>
+     <zorder>loadParamFile</zorder>
     </widget>
     <zorder>widget</zorder>
     <zorder>noNormaButton</zorder>
@@ -440,7 +485,7 @@
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>210</x>
         <y>10</y>
         <width>121</width>
         <height>31</height>
@@ -463,7 +508,7 @@
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>110</y>
+        <y>120</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -479,7 +524,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>50</y>
+        <y>60</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -495,7 +540,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>110</y>
+        <y>120</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -507,24 +552,11 @@
        <string>Load Folder</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="button3D">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>170</y>
-        <width>131</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>3D Image</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="imageNumber">
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>60</y>
+        <y>70</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -552,7 +584,7 @@
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>120</y>
+        <y>130</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -580,7 +612,7 @@
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>50</y>
+        <y>60</y>
         <width>150</width>
         <height>50</height>
        </rect>
