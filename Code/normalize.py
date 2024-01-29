@@ -6,6 +6,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
 
+
+
+
 class NormalizationStrategy(ABC):
 
     @abstractmethod
@@ -23,6 +26,9 @@ class NormalizationStrategy(ABC):
             plt.colorbar()
             plt.savefig(os.path.join(folder, filename))
             plt.close()
+
+    def getNormImage(self, image, min, max, n_bits):
+        return (((2 ** n_bits) - 1) * (image - min) / (max - min + 1)).astype(np.uint8)
 
 class NoNormalization(NormalizationStrategy):
     def normalize(self, images):
