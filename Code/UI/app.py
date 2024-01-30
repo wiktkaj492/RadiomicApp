@@ -257,7 +257,7 @@ class Ui_MainWindow(object):
         # self.roiButton.clicked.connect(lambda: self.getROI())
         # self.generateNormButton.clicked.connect(lambda: self.chooseNormalization())
         # self.csvButton.clicked.connect(lambda: self.radiomics())
-        self.csvButton.clicked.connect(lambda: self.generateCsvAndNormalize())
+        self.csvButton.clicked.connect(lambda: self.generateCsvAll())
         self.loadParamFile.clicked.connect(lambda: self.getParamFile())
 
     def save_debug_images(self, images, filenames, folder="debug_images"):
@@ -350,6 +350,13 @@ class Ui_MainWindow(object):
     def getParamFile(self):
         self.input_param_file,_ = QFileDialog.getOpenFileName(self.window, 'Choose a parameter file', "${HOME}", "Formats: (*.yaml)")
 
+        if not self.input_param_file:
+            QMessageBox.warning(self.window, "No Param File", "Please select file with parameters.")
+            return
+
+        messageParam = ""
+        messageParam = "Succesfull"
+        self.loadParamStatus.setText(messageParam)
 
 
 
@@ -430,8 +437,9 @@ class Ui_MainWindow(object):
                 empty_masks.append(mask)
                 empty_masks_images.append(image_path)
             else:
+                new_image = None
                 if self.noNormaButton.isChecked():
-                    new_image = no_normalization.normalize(image, mask)
+                    new_image = no_normalization.normalize(image, mask, numberBits)
                     normalization_selected = True
                 elif self.minMaxButton.isChecked():
                     new_image = min_max_normalization.normalize(image, numberBits, mask)
@@ -443,14 +451,15 @@ class Ui_MainWindow(object):
                     new_image = percentile_normalization.normalize(image, numberBits, mask)
                     normalization_selected = True
 
-            # print(f"normImage: {new_image.shape}")
+                if new_image is not None:  # Dodanie tylko jeśli new_image nie jest None
+                    normImages.append((new_image, image_path, mask))
 
-            normImages.append((new_image, image_path, mask))
-            self.emptyMasksList.addItems(empty_masks_images)
 
         if not normalization_selected:
             message = "No normalization method selected."
             QMessageBox.warning(self.window, "No Normalization Selected", message)
+
+        self.emptyMasksList.addItems(empty_masks_images)
 
         return normImages
 
@@ -466,13 +475,15 @@ class Ui_MainWindow(object):
         messageRadiomic = "CSV files created "
         self.csvStatusLabel.setText(messageRadiomic)
 
-    def generateCsvAndNormalize(self):
+    def generateCsvAll(self):
         newMasks = self.chooseSegmentation(self.input_masks)
-
         normImages = self.chooseNormalization(self.input_images, self.numberBits.value(), newMasks)
 
-        # roiImgsMasks = self.getROI(normImages, newMasks)
-        self.radiomics(normImages, self.input_param_file)
+        if not self.input_param_file:
+            QMessageBox.warning(self.window, "No Param File", "Please select file with parameters.")
+        else:
+            # roiImgsMasks = self.getROI(normImages, newMasks)
+            self.radiomics(normImages, self.input_param_file)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

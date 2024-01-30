@@ -31,7 +31,7 @@ class NormalizationStrategy(ABC):
         return (((2 ** n_bits) - 1) * (image - min) / (max - min + 1)).astype(np.uint8)
 
 class NoNormalization(NormalizationStrategy):
-    def normalize(self, images):
+    def normalize(self, images, n_bits, mask):
         # Simply return the image as is, without any normalization
         return images
 
