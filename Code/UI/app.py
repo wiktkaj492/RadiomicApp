@@ -24,6 +24,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Ui_MainWindow(object):
 
     def __init__(self):
@@ -45,7 +46,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         self.window = MainWindow
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(938, 633)
+        MainWindow.resize(1060, 633)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.frame = QtWidgets.QFrame(self.centralwidget)
@@ -122,17 +123,8 @@ class Ui_MainWindow(object):
         self.statusMaskLabel.setText("")
         self.statusMaskLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.statusMaskLabel.setObjectName("statusMaskLabel")
-        self.statusROILabel = QtWidgets.QLabel(self.widget)
-        self.statusROILabel.setGeometry(QtCore.QRect(360, 120, 231, 31))
-        self.statusROILabel.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.statusROILabel.setStyleSheet("")
-        self.statusROILabel.setFrameShape(QtWidgets.QFrame.Panel)
-        self.statusROILabel.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.statusROILabel.setText("")
-        self.statusROILabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.statusROILabel.setObjectName("statusROILabel")
         self.csvStatusLabel = QtWidgets.QLabel(self.widget)
-        self.csvStatusLabel.setGeometry(QtCore.QRect(730, 340, 151, 31))
+        self.csvStatusLabel.setGeometry(QtCore.QRect(730, 310, 151, 31))
         self.csvStatusLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.csvStatusLabel.setStyleSheet("background-color: rgb(186, 188, 162);")
         self.csvStatusLabel.setFrameShape(QtWidgets.QFrame.Panel)
@@ -141,7 +133,7 @@ class Ui_MainWindow(object):
         self.csvStatusLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.csvStatusLabel.setObjectName("csvStatusLabel")
         self.csvButton = QtWidgets.QPushButton(self.widget)
-        self.csvButton.setGeometry(QtCore.QRect(730, 280, 150, 50))
+        self.csvButton.setGeometry(QtCore.QRect(730, 250, 150, 50))
         self.csvButton.setStyleSheet("background-color: rgb(210, 204, 204);\n"
 "")
         self.csvButton.setObjectName("csvButton")
@@ -155,7 +147,7 @@ class Ui_MainWindow(object):
         self.label_7.setAlignment(QtCore.Qt.AlignCenter)
         self.label_7.setObjectName("label_7")
         self.loadParamStatus = QtWidgets.QLabel(self.widget)
-        self.loadParamStatus.setGeometry(QtCore.QRect(490, 340, 151, 31))
+        self.loadParamStatus.setGeometry(QtCore.QRect(490, 310, 151, 31))
         self.loadParamStatus.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.loadParamStatus.setStyleSheet("background-color: rgb(186, 188, 162);")
         self.loadParamStatus.setFrameShape(QtWidgets.QFrame.Panel)
@@ -164,14 +156,13 @@ class Ui_MainWindow(object):
         self.loadParamStatus.setAlignment(QtCore.Qt.AlignCenter)
         self.loadParamStatus.setObjectName("loadParamStatus")
         self.loadParamFile = QtWidgets.QPushButton(self.widget)
-        self.loadParamFile.setGeometry(QtCore.QRect(490, 280, 150, 50))
+        self.loadParamFile.setGeometry(QtCore.QRect(490, 250, 150, 50))
         self.loadParamFile.setStyleSheet("background-color: rgb(210, 204, 204);\n"
 "")
         self.loadParamFile.setObjectName("loadParamFile")
         self.widget_6.raise_()
         self.widget_5.raise_()
         self.statusMaskLabel.raise_()
-        self.statusROILabel.raise_()
         self.csvStatusLabel.raise_()
         self.csvButton.raise_()
         self.emptyMasksList.raise_()
@@ -233,14 +224,41 @@ class Ui_MainWindow(object):
         self.loadMaskButton.setStyleSheet("background-color: rgb(210, 204, 204);")
         self.loadMaskButton.setObjectName("loadMaskButton")
         self.widget_2 = QtWidgets.QWidget(self.centralwidget)
-        self.widget_2.setGeometry(QtCore.QRect(0, 0, 961, 641))
+        self.widget_2.setGeometry(QtCore.QRect(0, 0, 1071, 641))
         self.widget_2.setStyleSheet("background-color: rgb(81, 93, 78);")
         self.widget_2.setObjectName("widget_2")
         self.loadDataList = QtWidgets.QListWidget(self.widget_2)
-        self.loadDataList.setGeometry(QtCore.QRect(560, 420, 371, 201))
+        self.loadDataList.setGeometry(QtCore.QRect(570, 440, 231, 181))
         self.loadDataList.setStyleSheet("background-color: rgb(239, 239, 239);")
         self.loadDataList.setFrameShape(QtWidgets.QFrame.Panel)
         self.loadDataList.setObjectName("loadDataList")
+        self.loadMasksList = QtWidgets.QListWidget(self.widget_2)
+        self.loadMasksList.setGeometry(QtCore.QRect(820, 440, 231, 181))
+        self.loadMasksList.setStyleSheet("background-color: rgb(239, 239, 239);")
+        self.loadMasksList.setFrameShape(QtWidgets.QFrame.Panel)
+        self.loadMasksList.setObjectName("loadMasksList")
+        self.label_4 = QtWidgets.QLabel(self.widget_2)
+        self.label_4.setGeometry(QtCore.QRect(620, 410, 121, 21))
+        self.label_4.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.label_4.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.label_4.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_4.setObjectName("label_4")
+        self.label_9 = QtWidgets.QLabel(self.widget_2)
+        self.label_9.setGeometry(QtCore.QRect(880, 410, 121, 21))
+        self.label_9.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.label_9.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.label_9.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.label_9.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_9.setObjectName("label_9")
+        self.widget_3 = QtWidgets.QWidget(self.widget_2)
+        self.widget_3.setGeometry(QtCore.QRect(940, 20, 111, 381))
+        self.widget_3.setStyleSheet("background-color: rgb(186, 188, 162);")
+        self.widget_3.setObjectName("widget_3")
+        self.resetAppButton = QtWidgets.QPushButton(self.widget_3)
+        self.resetAppButton.setGeometry(QtCore.QRect(10, 20, 91, 50))
+        self.resetAppButton.setStyleSheet("background-color: rgb(210, 204, 204);")
+        self.resetAppButton.setObjectName("resetAppButton")
         self.widget_2.raise_()
         self.frame.raise_()
         self.frame_2.raise_()
@@ -259,6 +277,7 @@ class Ui_MainWindow(object):
         # self.csvButton.clicked.connect(lambda: self.radiomics())
         self.csvButton.clicked.connect(lambda: self.generateCsvAll())
         self.loadParamFile.clicked.connect(lambda: self.getParamFile())
+        self.resetAppButton.clicked.connect(lambda: self.reset())
 
     def save_debug_images(self, images, filenames, folder="debug_images"):
         # Create the folder if it doesn't exist
@@ -291,7 +310,6 @@ class Ui_MainWindow(object):
 
         # print(f"Image: {len(self.input_images)}")
 
-
     def getFolder(self):
         # Open window to choose file
         self.folderPath = QFileDialog.getExistingDirectory(self.window, 'Choose a patient Directory', "${HOME}")
@@ -323,6 +341,7 @@ class Ui_MainWindow(object):
             self.input_masks.append(mask)
             self.input_mask_path.append(filePath)
 
+            self.loadMasksList.addItems(self.input_mask_path)
             self.maskNumber.setText(f"Masks: {len(self.input_masks)}")
             print(f"Masks: {len(self.input_masks)}")
 
@@ -343,12 +362,14 @@ class Ui_MainWindow(object):
                         self.input_mask_path.append(filePath)
                         print(f"Masks Folder: {len(self.input_masks)}")
 
-                        self.maskNumber.setText(f"Masks: {len(self.input_masks)}")
+            self.maskNumber.setText(f"Masks: {len(self.input_masks)}")
+            self.loadMasksList.addItems(self.input_mask_path)
         else:
             QMessageBox.warning(self.window, "No Masks Selected", "Please select masks directory.")
 
     def getParamFile(self):
-        self.input_param_file,_ = QFileDialog.getOpenFileName(self.window, 'Choose a parameter file', "${HOME}", "Formats: (*.yaml)")
+        self.input_param_file, _ = QFileDialog.getOpenFileName(self.window, 'Choose a parameter file', "${HOME}",
+                                                               "Formats: (*.yaml)")
 
         if not self.input_param_file:
             QMessageBox.warning(self.window, "No Param File", "Please select file with parameters.")
@@ -358,7 +379,26 @@ class Ui_MainWindow(object):
         messageParam = "Succesfull"
         self.loadParamStatus.setText(messageParam)
 
-
+    def reset(self):
+        self.filePath = ''
+        self.folderPath = ''
+        self.input_images = []
+        self.input_images_names = []
+        self.input_images_paths = []
+        self.folders_paths = []
+        self.input_masks = []
+        self.input_mask_path = []
+        self.emptyMasks = []
+        self.newMaskFolder = []
+        self.input_param_file = ''
+        self.imageNumber.clear()
+        self.maskNumber.clear()
+        self.loadDataList.clear()
+        self.loadMasksList.clear()
+        self.emptyMasksList.clear()
+        self.statusMaskLabel.clear()
+        self.csvStatusLabel.clear()
+        self.loadParamStatus.clear()
 
     def showImages(self):
         if self.images:
@@ -454,7 +494,6 @@ class Ui_MainWindow(object):
                 if new_image is not None:  # Dodanie tylko jeśli new_image nie jest None
                     normImages.append((new_image, image_path, mask))
 
-
         if not normalization_selected:
             message = "No normalization method selected."
             QMessageBox.warning(self.window, "No Normalization Selected", message)
@@ -508,6 +547,9 @@ class Ui_MainWindow(object):
         self.loadDataButton.setText(_translate("MainWindow", "Load Data"))
         self.LoadFolderButton.setText(_translate("MainWindow", "Load Folder"))
         self.loadMaskButton.setText(_translate("MainWindow", "Load Mask"))
+        self.label_4.setText(_translate("MainWindow", "Images"))
+        self.label_9.setText(_translate("MainWindow", "Masks"))
+        self.resetAppButton.setText(_translate("MainWindow", "Reset"))
 
 
 if __name__ == "__main__":

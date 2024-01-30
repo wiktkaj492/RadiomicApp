@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>938</width>
+    <width>1060</width>
     <height>633</height>
    </rect>
   </property>
@@ -288,39 +288,11 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="statusROILabel">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>120</y>
-        <width>231</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::Panel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
      <widget class="QLabel" name="csvStatusLabel">
       <property name="geometry">
        <rect>
         <x>730</x>
-        <y>340</y>
+        <y>310</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -348,7 +320,7 @@
       <property name="geometry">
        <rect>
         <x>730</x>
-        <y>280</y>
+        <y>250</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -397,7 +369,7 @@
       <property name="geometry">
        <rect>
         <x>490</x>
-        <y>340</y>
+        <y>310</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -425,7 +397,7 @@
       <property name="geometry">
        <rect>
         <x>490</x>
-        <y>280</y>
+        <y>250</y>
         <width>150</width>
         <height>50</height>
        </rect>
@@ -441,7 +413,6 @@
      <zorder>widget_6</zorder>
      <zorder>widget_5</zorder>
      <zorder>statusMaskLabel</zorder>
-     <zorder>statusROILabel</zorder>
      <zorder>csvStatusLabel</zorder>
      <zorder>csvButton</zorder>
      <zorder>emptyMasksList</zorder>
@@ -631,7 +602,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>961</width>
+      <width>1071</width>
       <height>641</height>
      </rect>
     </property>
@@ -641,10 +612,10 @@
     <widget class="QListWidget" name="loadDataList">
      <property name="geometry">
       <rect>
-       <x>560</x>
-       <y>420</y>
-       <width>371</width>
-       <height>201</height>
+       <x>570</x>
+       <y>440</y>
+       <width>231</width>
+       <height>181</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -653,6 +624,101 @@
      <property name="frameShape">
       <enum>QFrame::Panel</enum>
      </property>
+    </widget>
+    <widget class="QListWidget" name="loadMasksList">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>440</y>
+       <width>231</width>
+       <height>181</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(239, 239, 239);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>410</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(186, 188, 162);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="text">
+      <string>Images</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>880</x>
+       <y>410</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(186, 188, 162);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="text">
+      <string>Masks</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QWidget" name="widget_3" native="true">
+     <property name="geometry">
+      <rect>
+       <x>940</x>
+       <y>20</y>
+       <width>111</width>
+       <height>381</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(186, 188, 162);</string>
+     </property>
+     <widget class="QPushButton" name="resetAppButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>91</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(210, 204, 204);</string>
+      </property>
+      <property name="text">
+       <string>Reset</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <zorder>widget_2</zorder>
