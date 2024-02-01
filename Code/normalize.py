@@ -64,8 +64,8 @@ class MeanStdNormalization(NormalizationStrategy):
         mean_val = np.mean(masked_pixels)
         std_val = np.std(masked_pixels)
 
-        min_val = mean_val - std_val
-        max_val = mean_val + std_val
+        min_val = mean_val - std_val*3
+        max_val = mean_val + std_val*3
 
         normalized_image = self.getNormImage(roiImage, min_val, max_val, n_bits)
         self.save_debug_images([normalized_image], ["norm_meanstd"])
